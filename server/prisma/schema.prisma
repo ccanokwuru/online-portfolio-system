@@ -19,7 +19,6 @@ model User {
   interests       Skill[]
   contacts        Contact[]
   creator         Creator?
-  colectors       Collector?
   favourites      Favourite[]
   badges          Badge[]
   createdAt       DateTime    @default(now())
@@ -30,15 +29,17 @@ model User {
   comments        Comment[]
   sentMessage     Message[]   @relation("sent")
   recievedMessage Message[]   @relation("recieved")
-  role            String     @db.VarChar(20) @default("collector")
+  role            String      @default("collector") @db.VarChar(20)
   sessions        Session[]
+  jobs            Job[]
+  orders          Order[]
+  wishlist        Work[]
 }
 
 model Admin {
   id        Int      @id @default(autoincrement())
   ref       String   @unique @db.Uuid
   user      User     @relation(fields: [userId], references: [id])
-  badges    Badge[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   userId    Int      @unique
@@ -49,7 +50,6 @@ model Creator {
   ref         String       @unique @db.Uuid
   user        User         @relation(fields: [userId], references: [id])
   works       Work[]
-  badges      Badge[]
   skills      Skill[]
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
@@ -59,19 +59,6 @@ model Creator {
   exhibitions Exhibition[]
   userId      Int          @unique
   reactions   Reaction[]
-}
-
-model Collector {
-  id        Int      @id @default(autoincrement())
-  ref       String   @unique @db.Uuid
-  user      User     @relation(fields: [userId], references: [id])
-  badges    Badge[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  jobs      Job[]
-  orders    Order[]
-  wishlist  Work[]
-  userId    Int      @unique
 }
 
 model Favourite {
@@ -199,7 +186,7 @@ model Work {
   studioId    Int?
   reviews     Review[]
   orders      Order[]
-  wishers     Collector[]
+  wishers     User[]
   exhibition  Exhibition[]
   creatorId   Int
   reaction    Reaction?    @relation(fields: [reactionId], references: [id])
@@ -207,16 +194,16 @@ model Work {
 }
 
 model Order {
-  id          Int       @id @default(autoincrement())
-  ref         String    @unique @db.Uuid
+  id          Int      @id @default(autoincrement())
+  ref         String   @unique @db.Uuid
   description String?
-  collector   Collector @relation(fields: [collectorId], references: [id])
+  collector   User     @relation(fields: [userId], references: [id])
   works       Work[]
   price       Decimal?
-  currency    String?   @db.VarChar(3)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  collectorId Int
+  currency    String?  @db.VarChar(3)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  userId      Int
 }
 
 model Studio {
@@ -256,9 +243,9 @@ model Job {
   description String?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-  employer    Collector @relation(fields: [employerId], references: [id])
+  owner       User      @relation(fields: [ownerId], references: [id])
   applicants  Creator[]
-  employerId  Int
+  ownerId     Int
 }
 
 model Contact {
@@ -275,16 +262,13 @@ model Contact {
 }
 
 model Badge {
-  id          Int         @id @default(autoincrement())
-  type        String?     @db.VarChar(20)
-  name        String      @unique @db.VarChar(50)
-  description String?     @db.VarChar(500)
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  id          Int      @id @default(autoincrement())
+  type        String?  @db.VarChar(20)
+  name        String   @unique @db.VarChar(50)
+  description String?  @db.VarChar(500)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
   users       User[]
-  creators    Creator[]
-  colectors   Collector[]
-  admins      Admin[]
 }
 
 model Session {

@@ -1,8 +1,8 @@
 {
-  "name": "prolifolio",
+  "name": "profolio",
   "version": "0.0.1",
-  "description": "Online Portfolio Platform For Art & Artists",
-  "productName": "ProliFolio",
+  "description": "Online Portfolio System For Artistic Creators",
+  "productName": "Prolifio App",
   "author": "ccanokwuru <cccanoks@gmail.com>",
   "private": true,
   "scripts": {

@@ -12,7 +12,6 @@ export interface IUser {
   interests: ISkill[]
   contacts: IContact[]
   creator?: ICreator
-  collectors?: ICollector
   favourites: IFavourite[]
   badges: IBadge[]
   createdAt: Date
@@ -25,6 +24,9 @@ export interface IUser {
   recievedMessage: IMessage[]
   role: string
   sessions: ISession[]
+  jobs: IJob[]
+  orders: IOrder[]
+  wishlist: IWork[]
 }
 
 export interface IAdmin {
@@ -42,7 +44,6 @@ export interface ICreator {
   ref: string
   user: IUser
   works: IWork[]
-  badges: IBadge[]
   skills: ISkill[]
   createdAt: Date
   updatedAt: Date
@@ -52,19 +53,6 @@ export interface ICreator {
   exhibitions: IExhibition[]
   userId: number
   reactions: IReaction[]
-}
-
-export interface ICollector {
-  id: number
-  ref: string
-  user: IUser
-  badges: IBadge[]
-  createdAt: Date
-  updatedAt: Date
-  jobs: IJob[]
-  orders: IOrder[]
-  wishlist: IWork[]
-  userId: number
 }
 
 export interface IFavourite {
@@ -192,7 +180,7 @@ export interface IWork {
   studioId?: number
   reviews: IReview[]
   orders: IOrder[]
-  wishers: ICollector[]
+  wishers: IUser[]
   exhibition: IExhibition[]
   creatorId: number
   Reaction?: IReaction
@@ -203,7 +191,7 @@ export interface IOrder {
   id: number
   ref: string
   description?: string
-  collector: ICollector
+  user: IUser
   works: IWork[]
   price: Decimal
   currency?: String
@@ -249,9 +237,9 @@ export interface IJob {
   description?: number
   createdAt: Date
   updatedAt: Date
-  employer: ICollector
+  owner: IUser
   applicants: ICreator[]
-  employerId: number
+  ownerId: number
 }
 
 export interface IContact {
@@ -275,9 +263,6 @@ export interface IBadge {
   createdAt: Date
   updatedAt: Date
   users: IUser[]
-  creators: ICreator[]
-  collectors: ICollector[]
-  admins: IAdmin[]
 }
 
 export interface ISession {

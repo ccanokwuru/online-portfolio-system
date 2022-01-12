@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 const userRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
   fastify.post<{ Body: ISignup }>("/register", async function (request, reply) {
     const { email, password, confirm, display_name } = request.body;
-    if (!email.length || !password.length || !confirm.length||!display_name.length)
+    if (!email.length || !password.length || !confirm.length || !display_name.length)
       return reply.code(401).send({ msg: "missing fields" });
     if (password !== confirm)
       return reply.code(401).send({ msg: "passwords do not match" });
@@ -17,12 +17,6 @@ const userRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
     const ref = `${crypto.randomBytes(5).toString("hex")}${Math.floor(
       Math.random() * 10
     ).toString(16)}`;
-
-
-    // const adminDetails = (collector: Prisma.CollectorCreateInput) => {
-    //   return {
-    //   };
-    // };
 
     const result = await prisma.user.create({
       data: {

@@ -1,6 +1,6 @@
-# ProliFolio (prolifolio)
+# Prolifio App (profolio)
 
-Online Portfolio Platform For Art & Artists
+Online Portfolio System For Artistic Creators
 
 ## Install the dependencies
 ```bash
