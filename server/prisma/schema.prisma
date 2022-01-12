@@ -1,0 +1,306 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgres"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              Int         @id @default(autoincrement())
+  ref             String      @unique @db.Uuid
+  first_name      String?     @db.VarChar(200)
+  last_name       String?     @db.VarChar(200)
+  other_name      String?     @db.VarChar(200)
+  display_name    String      @unique @db.VarChar(200)
+  email           String      @unique @db.VarChar(200)
+  password        String      @db.VarChar(255)
+  interests       Skill[]
+  contacts        Contact[]
+  creator         Creator?
+  colectors       Collector?
+  favourites      Favourite[]
+  badges          Badge[]
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  admin           Admin?
+  reviews         Review[]
+  posts           Post[]
+  comments        Comment[]
+  sentMessage     Message[]   @relation("sent")
+  recievedMessage Message[]   @relation("recieved")
+  role            String     @db.VarChar(20) @default("collector")
+  sessions        Session[]
+}
+
+model Admin {
+  id        Int      @id @default(autoincrement())
+  ref       String   @unique @db.Uuid
+  user      User     @relation(fields: [userId], references: [id])
+  badges    Badge[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    Int      @unique
+}
+
+model Creator {
+  id          Int          @id @default(autoincrement())
+  ref         String       @unique @db.Uuid
+  user        User         @relation(fields: [userId], references: [id])
+  works       Work[]
+  badges      Badge[]
+  skills      Skill[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  jobs        Job[]
+  studio      Studio?
+  favourites  Favourite[]
+  exhibitions Exhibition[]
+  userId      Int          @unique
+  reactions   Reaction[]
+}
+
+model Collector {
+  id        Int      @id @default(autoincrement())
+  ref       String   @unique @db.Uuid
+  user      User     @relation(fields: [userId], references: [id])
+  badges    Badge[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  jobs      Job[]
+  orders    Order[]
+  wishlist  Work[]
+  userId    Int      @unique
+}
+
+model Favourite {
+  id        Int      @id @default(autoincrement())
+  work      Work?    @relation(fields: [workId], references: [id])
+  post      Post?    @relation(fields: [postId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+  studio    Studio?  @relation(fields: [studioId], references: [id])
+  creator   Creator? @relation(fields: [creatorId], references: [id])
+  creatorId Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  workId    Int?
+  userId    Int
+  studioId  Int?
+  postId    Int?
+}
+
+model Reaction {
+  id        Int       @id @default(autoincrement())
+  works     Work[]
+  posts     Post[]
+  studio    Studio[]
+  creator   Creator[]
+  type      String    @db.VarChar(15)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Skill {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique @db.Uuid
+  category    Category  @relation(fields: [categoryId], references: [id])
+  categoryId  Int
+  description String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  users       User[]
+  creators    Creator[]
+}
+
+model Category {
+  id           Int        @id @default(autoincrement())
+  name         String     @unique @db.Uuid
+  catergories  Category[] @relation("CategoryToCategory")
+  skills       Skill[]
+  works        Work[]
+  jobs         Job[]
+  description  String?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  p_category   Category?  @relation("CategoryToCategory", fields: [p_categoryId], references: [id])
+  p_categoryId Int?
+}
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  comment   String
+  rating    Decimal
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    Int
+  work      Work?    @relation(fields: [workId], references: [id])
+  workId    Int?
+}
+
+model Message {
+  id          Int       @id @default(autoincrement())
+  ref         String    @unique @db.Uuid
+  sender      User      @relation(fields: [senderId], references: [id], name: "sent")
+  senderId    Int
+  reciever    User      @relation(fields: [recieverId], references: [id], name: "recieved")
+  recieverId  Int
+  message     String
+  replies     Message[] @relation("MessageToMessage")
+  p_message   Message?  @relation("MessageToMessage", fields: [p_messageId], references: [id])
+  p_messageId Int?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Post {
+  id         Int         @id @default(autoincrement())
+  slug       String      @unique @db.Uuid
+  title      String      @db.VarChar(200)
+  content    String
+  mainImage  String      @db.VarChar(500)
+  author     User        @relation(fields: [authorId], references: [id])
+  authorId   Int
+  comments   Comment[]
+  favourites Favourite[]
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  reactions  Reaction[]
+}
+
+model Comment {
+  id          Int       @id @default(autoincrement())
+  ref         String    @unique @db.Uuid
+  post        Post?     @relation(fields: [postId], references: [id])
+  postId      Int?
+  p_comment   Comment?  @relation(fields: [p_commentId], references: [id], name: "CommentToComment")
+  p_commentId Int?
+  message     String
+  user        User      @relation(fields: [userId], references: [id])
+  userId      Int
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  comments    Comment[] @relation("CommentToComment")
+}
+
+model Work {
+  id          Int          @id @default(autoincrement())
+  name        String       @db.VarChar(200)
+  ref         String       @unique @db.Uuid
+  category    Category     @relation(fields: [categoryId], references: [id])
+  categoryId  Int
+  description String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  creator     Creator      @relation(fields: [creatorId], references: [id])
+  favourites  Favourite[]
+  studio      Studio?      @relation(fields: [studioId], references: [id])
+  studioId    Int?
+  reviews     Review[]
+  orders      Order[]
+  wishers     Collector[]
+  exhibition  Exhibition[]
+  creatorId   Int
+  reaction    Reaction?    @relation(fields: [reactionId], references: [id])
+  reactionId  Int?
+}
+
+model Order {
+  id          Int       @id @default(autoincrement())
+  ref         String    @unique @db.Uuid
+  description String?
+  collector   Collector @relation(fields: [collectorId], references: [id])
+  works       Work[]
+  price       Decimal?
+  currency    String?   @db.VarChar(3)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  collectorId Int
+}
+
+model Studio {
+  id          Int         @id @default(autoincrement())
+  name        String      @unique @db.VarChar(100)
+  ref         String      @unique @db.Uuid
+  description String?
+  creator     Creator     @relation(fields: [creatorId], references: [id])
+  works       Work[]
+  favourites  Favourite[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  creatorId   Int         @unique
+  reaction    Reaction?   @relation(fields: [reactionId], references: [id])
+  reactionId  Int?
+}
+
+model Exhibition {
+  id          Int      @id @default(autoincrement())
+  description String?
+  creator     Creator  @relation(fields: [creatorId], references: [id])
+  work        Work     @relation(fields: [workId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  price       Decimal?
+  currency    String?  @db.VarChar(3)
+  sellAs      String?  @db.VarChar(15)
+  creatorId   Int
+  workId      Int
+}
+
+model Job {
+  id          Int       @id @default(autoincrement())
+  title       String    @db.VarChar(200)
+  category    Category  @relation(fields: [categoryId], references: [id])
+  categoryId  Int
+  description String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  employer    Collector @relation(fields: [employerId], references: [id])
+  applicants  Creator[]
+  employerId  Int
+}
+
+model Contact {
+  id        Int      @id @default(autoincrement())
+  type      String   @db.VarChar(20)
+  phone     String   @unique @db.VarChar(15)
+  email     String   @unique @db.VarChar(500)
+  address   String
+  position  String?  @db.VarChar(100)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+}
+
+model Badge {
+  id          Int         @id @default(autoincrement())
+  type        String?     @db.VarChar(20)
+  name        String      @unique @db.VarChar(50)
+  description String?     @db.VarChar(500)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  users       User[]
+  creators    Creator[]
+  colectors   Collector[]
+  admins      Admin[]
+}
+
+model Session {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  expiredAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  details   Json
+  token     Token[]
+}
+
+model Token {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique @db.VarChar(500)
+  session   Session  @relation(fields: [sessionId], references: [id])
+  createdAt DateTime @default(now())
+  sessionId Int
+}
