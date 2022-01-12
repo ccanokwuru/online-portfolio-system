@@ -10,7 +10,7 @@ CREATE TABLE "User" (
     "password" VARCHAR(255) NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "role" VARCHAR(20),
+    "role" VARCHAR(20) NOT NULL DEFAULT E'collector',
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -35,17 +35,6 @@ CREATE TABLE "Creator" (
     "userId" INTEGER NOT NULL,
 
     CONSTRAINT "Creator_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "Collector" (
-    "id" SERIAL NOT NULL,
-    "ref" UUID NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-    "userId" INTEGER NOT NULL,
-
-    CONSTRAINT "Collector_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -176,7 +165,7 @@ CREATE TABLE "Order" (
     "currency" VARCHAR(3),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "collectorId" INTEGER NOT NULL,
+    "userId" INTEGER NOT NULL,
 
     CONSTRAINT "Order_pkey" PRIMARY KEY ("id")
 );
@@ -218,7 +207,7 @@ CREATE TABLE "Job" (
     "description" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "employerId" INTEGER NOT NULL,
+    "ownerId" INTEGER NOT NULL,
 
     CONSTRAINT "Job_pkey" PRIMARY KEY ("id")
 );
@@ -284,13 +273,7 @@ CREATE TABLE "_BadgeToUser" (
 );
 
 -- CreateTable
-CREATE TABLE "_AdminToBadge" (
-    "A" INTEGER NOT NULL,
-    "B" INTEGER NOT NULL
-);
-
--- CreateTable
-CREATE TABLE "_BadgeToCreator" (
+CREATE TABLE "_UserToWork" (
     "A" INTEGER NOT NULL,
     "B" INTEGER NOT NULL
 );
@@ -309,18 +292,6 @@ CREATE TABLE "_CreatorToJob" (
 
 -- CreateTable
 CREATE TABLE "_CreatorToReaction" (
-    "A" INTEGER NOT NULL,
-    "B" INTEGER NOT NULL
-);
-
--- CreateTable
-CREATE TABLE "_BadgeToCollector" (
-    "A" INTEGER NOT NULL,
-    "B" INTEGER NOT NULL
-);
-
--- CreateTable
-CREATE TABLE "_CollectorToWork" (
     "A" INTEGER NOT NULL,
     "B" INTEGER NOT NULL
 );
@@ -357,12 +328,6 @@ CREATE UNIQUE INDEX "Creator_ref_key" ON "Creator"("ref");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Creator_userId_key" ON "Creator"("userId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Collector_ref_key" ON "Collector"("ref");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Collector_userId_key" ON "Collector"("userId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Skill_name_key" ON "Skill"("name");
@@ -419,16 +384,10 @@ CREATE UNIQUE INDEX "_BadgeToUser_AB_unique" ON "_BadgeToUser"("A", "B");
 CREATE INDEX "_BadgeToUser_B_index" ON "_BadgeToUser"("B");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "_AdminToBadge_AB_unique" ON "_AdminToBadge"("A", "B");
+CREATE UNIQUE INDEX "_UserToWork_AB_unique" ON "_UserToWork"("A", "B");
 
 -- CreateIndex
-CREATE INDEX "_AdminToBadge_B_index" ON "_AdminToBadge"("B");
-
--- CreateIndex
-CREATE UNIQUE INDEX "_BadgeToCreator_AB_unique" ON "_BadgeToCreator"("A", "B");
-
--- CreateIndex
-CREATE INDEX "_BadgeToCreator_B_index" ON "_BadgeToCreator"("B");
+CREATE INDEX "_UserToWork_B_index" ON "_UserToWork"("B");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_CreatorToSkill_AB_unique" ON "_CreatorToSkill"("A", "B");
@@ -449,18 +408,6 @@ CREATE UNIQUE INDEX "_CreatorToReaction_AB_unique" ON "_CreatorToReaction"("A", 
 CREATE INDEX "_CreatorToReaction_B_index" ON "_CreatorToReaction"("B");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "_BadgeToCollector_AB_unique" ON "_BadgeToCollector"("A", "B");
-
--- CreateIndex
-CREATE INDEX "_BadgeToCollector_B_index" ON "_BadgeToCollector"("B");
-
--- CreateIndex
-CREATE UNIQUE INDEX "_CollectorToWork_AB_unique" ON "_CollectorToWork"("A", "B");
-
--- CreateIndex
-CREATE INDEX "_CollectorToWork_B_index" ON "_CollectorToWork"("B");
-
--- CreateIndex
 CREATE UNIQUE INDEX "_PostToReaction_AB_unique" ON "_PostToReaction"("A", "B");
 
 -- CreateIndex
@@ -477,9 +424,6 @@ ALTER TABLE "Admin" ADD CONSTRAINT "Admin_userId_fkey" FOREIGN KEY ("userId") RE
 
 -- AddForeignKey
 ALTER TABLE "Creator" ADD CONSTRAINT "Creator_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Collector" ADD CONSTRAINT "Collector_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Favourite" ADD CONSTRAINT "Favourite_workId_fkey" FOREIGN KEY ("workId") REFERENCES "Work"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -542,7 +486,7 @@ ALTER TABLE "Work" ADD CONSTRAINT "Work_studioId_fkey" FOREIGN KEY ("studioId") 
 ALTER TABLE "Work" ADD CONSTRAINT "Work_reactionId_fkey" FOREIGN KEY ("reactionId") REFERENCES "Reaction"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Order" ADD CONSTRAINT "Order_collectorId_fkey" FOREIGN KEY ("collectorId") REFERENCES "Collector"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Order" ADD CONSTRAINT "Order_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Studio" ADD CONSTRAINT "Studio_creatorId_fkey" FOREIGN KEY ("creatorId") REFERENCES "Creator"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -560,7 +504,7 @@ ALTER TABLE "Exhibition" ADD CONSTRAINT "Exhibition_workId_fkey" FOREIGN KEY ("w
 ALTER TABLE "Job" ADD CONSTRAINT "Job_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Job" ADD CONSTRAINT "Job_employerId_fkey" FOREIGN KEY ("employerId") REFERENCES "Collector"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Job" ADD CONSTRAINT "Job_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Contact" ADD CONSTRAINT "Contact_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -584,16 +528,10 @@ ALTER TABLE "_BadgeToUser" ADD FOREIGN KEY ("A") REFERENCES "Badge"("id") ON DEL
 ALTER TABLE "_BadgeToUser" ADD FOREIGN KEY ("B") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_AdminToBadge" ADD FOREIGN KEY ("A") REFERENCES "Admin"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_UserToWork" ADD FOREIGN KEY ("A") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_AdminToBadge" ADD FOREIGN KEY ("B") REFERENCES "Badge"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "_BadgeToCreator" ADD FOREIGN KEY ("A") REFERENCES "Badge"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "_BadgeToCreator" ADD FOREIGN KEY ("B") REFERENCES "Creator"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_UserToWork" ADD FOREIGN KEY ("B") REFERENCES "Work"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_CreatorToSkill" ADD FOREIGN KEY ("A") REFERENCES "Creator"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -612,18 +550,6 @@ ALTER TABLE "_CreatorToReaction" ADD FOREIGN KEY ("A") REFERENCES "Creator"("id"
 
 -- AddForeignKey
 ALTER TABLE "_CreatorToReaction" ADD FOREIGN KEY ("B") REFERENCES "Reaction"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "_BadgeToCollector" ADD FOREIGN KEY ("A") REFERENCES "Badge"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "_BadgeToCollector" ADD FOREIGN KEY ("B") REFERENCES "Collector"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "_CollectorToWork" ADD FOREIGN KEY ("A") REFERENCES "Collector"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "_CollectorToWork" ADD FOREIGN KEY ("B") REFERENCES "Work"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_PostToReaction" ADD FOREIGN KEY ("A") REFERENCES "Post"("id") ON DELETE CASCADE ON UPDATE CASCADE;
