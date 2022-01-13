@@ -9,7 +9,7 @@ datasource db {
 
 model User {
   id              Int         @id @default(autoincrement())
-  ref             String      @unique @db.Uuid
+  ref             String      @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   first_name      String?     @db.VarChar(200)
   last_name       String?     @db.VarChar(200)
   other_name      String?     @db.VarChar(200)
@@ -38,7 +38,7 @@ model User {
 
 model Admin {
   id        Int      @id @default(autoincrement())
-  ref       String   @unique @db.Uuid
+  ref       String   @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -47,7 +47,7 @@ model Admin {
 
 model Creator {
   id          Int          @id @default(autoincrement())
-  ref         String       @unique @db.Uuid
+  ref         String       @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   user        User         @relation(fields: [userId], references: [id])
   works       Work[]
   skills      Skill[]
@@ -90,7 +90,7 @@ model Reaction {
 
 model Skill {
   id          Int       @id @default(autoincrement())
-  name        String    @unique @db.Uuid
+  name        String
   category    Category  @relation(fields: [categoryId], references: [id])
   categoryId  Int
   description String?
@@ -128,7 +128,7 @@ model Review {
 
 model Message {
   id          Int       @id @default(autoincrement())
-  ref         String    @unique @db.Uuid
+  ref         String    @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   sender      User      @relation(fields: [senderId], references: [id], name: "sent")
   senderId    Int
   reciever    User      @relation(fields: [recieverId], references: [id], name: "recieved")
@@ -143,7 +143,7 @@ model Message {
 
 model Post {
   id         Int         @id @default(autoincrement())
-  slug       String      @unique @db.Uuid
+  slug       String      @unique @db.VarChar(200)
   title      String      @db.VarChar(200)
   content    String
   mainImage  String      @db.VarChar(500)
@@ -158,7 +158,7 @@ model Post {
 
 model Comment {
   id          Int       @id @default(autoincrement())
-  ref         String    @unique @db.Uuid
+  ref         String    @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   post        Post?     @relation(fields: [postId], references: [id])
   postId      Int?
   p_comment   Comment?  @relation(fields: [p_commentId], references: [id], name: "CommentToComment")
@@ -174,7 +174,7 @@ model Comment {
 model Work {
   id          Int          @id @default(autoincrement())
   name        String       @db.VarChar(200)
-  ref         String       @unique @db.Uuid
+  ref         String       @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   category    Category     @relation(fields: [categoryId], references: [id])
   categoryId  Int
   description String?
@@ -195,7 +195,7 @@ model Work {
 
 model Order {
   id          Int      @id @default(autoincrement())
-  ref         String   @unique @db.Uuid
+  ref         String   @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   description String?
   collector   User     @relation(fields: [userId], references: [id])
   works       Work[]
@@ -209,7 +209,7 @@ model Order {
 model Studio {
   id          Int         @id @default(autoincrement())
   name        String      @unique @db.VarChar(100)
-  ref         String      @unique @db.Uuid
+  ref         String      @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   description String?
   creator     Creator     @relation(fields: [creatorId], references: [id])
   works       Work[]
@@ -217,8 +217,7 @@ model Studio {
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
   creatorId   Int         @unique
-  reaction    Reaction?   @relation(fields: [reactionId], references: [id])
-  reactionId  Int?
+  reactions    Reaction[]
 }
 
 model Exhibition {

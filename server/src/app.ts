@@ -16,11 +16,11 @@ const app: FastifyPluginAsync<AppOptions> = async (
 ): Promise<void> => {
   // Place here your custom code!
   fastify.register(fastifyJwt, {
-    secret: "distor",
+    secret: "prolifolio",
   });
 
   fastify.register(fastifyCors, {
-    origin: "*",
+    // origin: "*",
     // allowedHeaders: ["Authorization", "Content-Type"],
   });
 

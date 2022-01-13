@@ -1,7 +1,7 @@
 import { Decimal } from "@prisma/client/runtime"
 
 export interface IUser {
-  id: number
+  id: number | undefined
   ref: string
   first_name?: string
   last_name?: string
@@ -30,7 +30,7 @@ export interface IUser {
 }
 
 export interface IAdmin {
-  id: number
+  id: number | undefined
   ref: string
   user: IUser
   badges: IBadge[]
@@ -40,7 +40,7 @@ export interface IAdmin {
 }
 
 export interface ICreator {
-  id: number
+  id: number | undefined
   ref: string
   user: IUser
   works: IWork[]
@@ -56,7 +56,7 @@ export interface ICreator {
 }
 
 export interface IFavourite {
-  id: number
+  id: number | undefined
   work?: IWork
   post?: IPost
   user: IUser
@@ -72,7 +72,7 @@ export interface IFavourite {
 }
 
 export interface IReaction {
-  id: number
+  id: number | undefined
   works: IWork[]
   posts: IPost[]
   studio: IStudio[]
@@ -109,7 +109,7 @@ export interface ICategory {
 }
 
 export interface IReview {
-  id: number
+  id: number | undefined
   user: IUser
   comment: string
   rating: number
@@ -121,7 +121,7 @@ export interface IReview {
 }
 
 export interface IMessage {
-  id: number
+  id: number | undefined
   ref: string
   sender: IUser
   senderId: number
@@ -136,7 +136,7 @@ export interface IMessage {
 }
 
 export interface IPost {
-  id: number
+  id: number | undefined
   slug: string
   title: string
   content: string
@@ -151,7 +151,7 @@ export interface IPost {
 }
 
 export interface IComment {
-  id: number
+  id: number | undefined
   ref: string
   post?: IPost
   postId: number
@@ -166,7 +166,7 @@ export interface IComment {
 }
 
 export interface IWork {
-  id: number
+  id: number | undefined
   name: string
   ref: string
   category: ICategory
@@ -188,7 +188,7 @@ export interface IWork {
 }
 
 export interface IOrder {
-  id: number
+  id: number | undefined
   ref: string
   description?: string
   user: IUser
@@ -201,7 +201,7 @@ export interface IOrder {
 }
 
 export interface IStudio {
-  id: number
+  id: number | undefined
   name: string
   ref: string
   description?: string
@@ -216,7 +216,7 @@ export interface IStudio {
 }
 
 export interface IExhibition {
-  id: number
+  id: number | undefined
   description?: string
   creator: ICreator
   work: IWork
@@ -230,7 +230,7 @@ export interface IExhibition {
 }
 
 export interface IJob {
-  id: number
+  id: number | undefined
   title: string
   category: ICategory
   categoryId: number
@@ -243,7 +243,7 @@ export interface IJob {
 }
 
 export interface IContact {
-  id: number
+  id: number | undefined
   type: string
   phone: string
   email: string
@@ -256,7 +256,7 @@ export interface IContact {
 }
 
 export interface IBadge {
-  id: number
+  id: number | undefined
   type: string
   name: string
   description?: string
@@ -266,7 +266,7 @@ export interface IBadge {
 }
 
 export interface ISession {
-  id: number
+  id: number | undefined
   createdAt: Date
   expiredAt: Date
   user: IUser
@@ -276,7 +276,7 @@ export interface ISession {
 }
 
 export interface IToken {
-  id: number
+  id: number | undefined
   token: string
   session: ISession
   createdAt: Date
@@ -293,4 +293,26 @@ export interface ISignup {
   email: string
   password: string
   confirm: string
+}
+
+export interface IOneUserParams {
+  ref: string
+}
+
+export interface IUserUpdate {
+  first_name?: string
+  last_name?: string
+  other_name?: string
+  display_name?: string
+  email?: string
+}
+
+export enum IRole {
+  crt = "creator",
+  adm = "admin",
+  col = "collector"
+}
+
+export interface IRoleBody {
+  role: string
 }
