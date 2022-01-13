@@ -68,7 +68,7 @@ export interface IFavourite {
   workId?: number
   userId: number
   studioId?: number
-  IPostId?: number
+  postId?: number
 }
 
 export interface IReaction {
@@ -176,15 +176,15 @@ export interface IWork {
   updatedAt: Date
   creator: ICreator
   favourites: IFavourite[]
-  Studio?: IStudio
+  studio?: IStudio
   studioId?: number
   reviews: IReview[]
   orders: IOrder[]
   wishers: IUser[]
   exhibition: IExhibition[]
   creatorId: number
-  Reaction?: IReaction
-  IReactionId?: number
+  reaction?: IReaction
+  reactionId?: number
 }
 
 export interface IOrder {

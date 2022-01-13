@@ -1,6 +1,7 @@
-import { Prisma, PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
+// import { Prisma, PrismaClient } from "@prisma/client";
 import { FastifyPluginAsync } from "fastify";
-import { IAdmin, ISignin, ISignup } from "../../interface";
+import { ISignin, ISignup, IUser } from "../../interface";
 import * as crypto from "crypto";
 
 const prisma = new PrismaClient();
@@ -64,74 +65,74 @@ const userRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
       },
     });
 
-    //   if (!user) return reply.code(401).send({ msg: "user not found" });
+    if (!user) return reply.code(401).send({ msg: "user not found" });
 
-    //   const match = await fastify.bcrypt.compare(password, user?.password);
+    const match = await fastify.bcrypt.compare(password, user?.password);
 
-    //   if (!match) {
-    //     return reply.code(401).send({ msg: "email or password is wrong" });
-    //   }
-    //   const userInfo = {
-    //     name: user.name,
-    //     email: user.email,
-    //   };
-    //   const token = fastify.jwt.sign(userInfo);
+    if (!match) {
+      return reply.code(401).send({ msg: "email or password is wrong" });
+    }
+    const userInfo = {
+      name: user.display_name,
+      email: user.email,
+    };
+    const token = fastify.jwt.sign(userInfo);
 
-    //   reply.code(200).setCookie("token", token, {
-    //     httpOnly: true,
-    //     signed: true,
-    //   });
+    reply.code(200).setCookie("token", token, {
+      httpOnly: true,
+      signed: true,
+    });
 
-    //   return {
-    //     user: userInfo,
-    //   };
-    // });
+    return {
+      user: userInfo,
+    };
+  });
 
-    // fastify.post("/logout", async function (request, reply) {
-    //   reply.clearCookie("token");
+  fastify.post("/logout", async function (request, reply) {
+    reply.clearCookie("token");
 
-    //   return {
-    //     msg: "Logout Successful",
-    //   };
+    return {
+      msg: "Logout Successful",
+    };
   });
 
   fastify.get("/", async function (request, reply) {
-    // const users = await prisma.user.findMany();
+    const users = await prisma.user.findMany();
 
-    // if (!users) return reply.code(404).send({ msg: "users not found" });
+    if (!users) return reply.code(404).send({ msg: "users not found" });
 
-    // let allUsers: {
-    //   id: number;
-    //   name: string | null;
-    //   email: string;
-    // }[] = [];
+    let allUsers: {
+      id: number;
+      name: string | null;
+      email: string;
+    }[] = [];
 
-    // users.forEach((user) => {
-    //   const userInfo = {
-    //     id: user.id,
-    //     name: user.name,
-    //     email: user.email,
-    //   };
+    users.forEach((user) => {
+      const userInfo = {
+        id: user.id,
+        name: user.display_name,
+        email: user.email,
+      };
 
-    //   allUsers.push(userInfo);
-    // });
+      allUsers.push(userInfo);
+    });
 
-    // return reply.send(allUsers);
+    return reply.send(allUsers);
   });
 
-  // fastify.get<{ Params: IUser }>("/:id", async function (request, reply) {
-  //   const { uid } = request.params;
+  fastify.get<{ Params: IUser }>("/:id", async function (request, reply) {
+    const { ref } = request.params;
 
-  //   const user = await prisma.user.findUnique({
-  //     where: {
-  //       id: uid,
-  //     },
-  //   });
+    const user = await prisma.user.findUnique({
+      where: {
+        ref,
+      },
+    });
 
-  //   if (!user) return reply.code(404).send({ msg: "user not found" });
+    if (!user) return reply.code(404).send({ msg: "user not found" });
 
-  //   return reply.send(user);
-  // });
+    return reply.send(user);
+  });
 };
 
 export default userRoute;

@@ -1,117 +1,61 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
-
-        <q-toolbar-title>
-          Quasar App
+  <q-layout view="hHr lpR ffr">
+    <q-header class="text-dark bg-transparent" height-hint="98">
+      <q-toolbar class="container mxauto">
+        <q-toolbar-title class>
+          <q-img class="mini-logo-img" src="~assets/logo.png" />
         </q-toolbar-title>
-
-        <div>Quasar v{{ $q.version }}</div>
+        <q-space />
+        <q-tabs align="center" class="gt-sm">
+          <q-route-tab to="/" label="Home" exact />
+          <q-route-tab to="/exhibitions" label="Exhibitions" exact />
+          <q-route-tab to="/creators" label="Creators" exact />
+          <q-route-tab to="/news" label="News" exact />
+        </q-tabs>
+        <q-space />
+        <q-btn color="red-10" label="Signin" rounded />
+        <q-btn dense flat round icon="bi-list" @click="toggleRightDrawer" class="lt-md" />
       </q-toolbar>
     </q-header>
 
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
-    >
+    <q-drawer v-model="rightDrawerOpen" side="right" elevated>
+      <!-- drawer content -->
       <q-list>
-        <q-item-label
-          header
-        >
-          Essential Links
-        </q-item-label>
-
-        <EssentialLink
-          v-for="link in essentialLinks"
-          :key="link.title"
-          v-bind="link"
-        />
+        <q-item clickable v-ripple to="/" exact>Home</q-item>
+        <q-item clickable v-ripple to="/exhibitions" exact>Exhibitions</q-item>
+        <q-item clickable v-ripple to="/creators" exact>Creators</q-item>
+        <q-item clickable v-ripple to="/news" exact>News</q-item>
       </q-list>
     </q-drawer>
 
     <q-page-container>
       <router-view />
     </q-page-container>
+
+    <q-footer class="bg-grey-8 text-white">
+      <q-toolbar>
+        <q-toolbar-title>&copy; Prolifolio</q-toolbar-title>
+
+        <q-space />
+        <div class="text-right"></div>
+      </q-toolbar>
+    </q-footer>
   </q-layout>
 </template>
 
-<script lang="ts">
-import EssentialLink from 'components/EssentialLink.vue'
+<script>
+import { ref } from 'vue';
 
-const linksList = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
-  }
-];
-
-import { defineComponent, ref } from 'vue'
-
-export default defineComponent({
-  name: 'MainLayout',
-
-  components: {
-    EssentialLink
-  },
-
-  setup () {
-    const leftDrawerOpen = ref(false)
+export default {
+  setup() {
+    const rightDrawerOpen = ref(false);
 
     return {
-      essentialLinks: linksList,
-      leftDrawerOpen,
-      toggleLeftDrawer () {
-        leftDrawerOpen.value = !leftDrawerOpen.value
-      }
-    }
-  }
-})
+      rightDrawerOpen,
+      toggleRightDrawer() {
+        rightDrawerOpen.value = !rightDrawerOpen.value;
+      },
+    };
+  },
+};
 </script>
