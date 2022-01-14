@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh lpR lff">
-    <q-header class="bg-transparent text-dark" height-hint="98">
+    <q-header class="bg-white text-dark" height-hint="98">
       <q-toolbar>
         <q-btn to="/" exact flat>
           <q-img class="mini-logo-img" src="~assets/logo.png" />
