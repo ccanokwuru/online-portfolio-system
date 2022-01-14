@@ -1,26 +1,40 @@
 <template>
   <q-layout view="lHh lpR lff">
-    <q-header class="bg-primary text-white" height-hint="98">
+    <q-header class="bg-transparent text-dark" height-hint="98">
       <q-toolbar>
-        <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
+        <q-btn to="/" exact flat>
+          <q-img class="mini-logo-img" src="~assets/logo.png" />
+        </q-btn>
 
-        <q-toolbar-title>
-          <q-avatar>
-            <img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg" />
-          </q-avatar>
-          Title
-        </q-toolbar-title>
+        <q-space />
+        <q-tabs align="right">
+          <q-route-tab to="/paintings" exact label="paintings" />
+          <q-route-tab to="/sculpture" exact label="sculpture" />
+          <q-route-tab to="/drawings" exact label="drawings" />
+          <q-route-tab to="/others" exact label="others" />
+          <q-route-tab to="/artists" exact label="artists" />
+        </q-tabs>
+
+        <q-btn color="dark" txet-color="dark" icon="bi-search" @click="onClick" flat round />
+        <q-btn color="dark" txet-color="dark" icon="bi-cart" @click="onClick" flat round />
+
+        <q-btn dense flat round icon="bi-list" @click="toggleLeftDrawer" class="lt-md" />
       </q-toolbar>
-
-      <q-tabs align="left">
-        <q-route-tab to="/page1" label="Page One" />
-        <q-route-tab to="/page2" label="Page Two" />
-        <q-route-tab to="/page3" label="Page Three" />
-      </q-tabs>
     </q-header>
 
-    <q-drawer show-if-above v-model="leftDrawerOpen" side="left">
+    <q-drawer v-model="leftDrawerOpen" side="left" v-if="$q.screen.lt.md">
       <!-- drawer content -->
+      <q-list>
+        <q-item class="flex flex-center">
+          <q-btn color="dark" txet-color="dark" icon="bi-search" @click="onClick" flat round />
+          <q-btn color="dark" txet-color="dark" icon="bi-cart" @click="onClick" flat round />
+        </q-item>
+        <q-item clickable v-ripple to="/paintings" exact>PAINTINGS</q-item>
+        <q-item clickable v-ripple to="/sculpture" exact>SCULPTURE</q-item>
+        <q-item clickable v-ripple to="/drawings" exact>DRAWINGS</q-item>
+        <q-item clickable v-ripple to="/others" exact>OTHERS</q-item>
+        <q-item clickable v-ripple to="/artists" exact>ARTISTS</q-item>
+      </q-list>
     </q-drawer>
 
     <q-page-container>
