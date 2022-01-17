@@ -172,7 +172,7 @@ model Comment {
 
 model Work {
   id          Int          @id @default(autoincrement())
-  name        String       @db.VarChar(200)
+  title       String       @db.VarChar(200)
   ref         String       @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   category    Category     @relation(fields: [categoryId], references: [id])
   categoryId  Int
@@ -188,8 +188,8 @@ model Work {
   wishers     User[]
   exhibition  Exhibition[]
   creatorId   Int
-  reaction    Reaction?    @relation(fields: [reactionId], references: [id])
-  reactionId  Int?
+  reactions   Reaction[]
+  images      Json
 }
 
 model Order {
@@ -221,13 +221,14 @@ model Studio {
 
 model Exhibition {
   id          Int      @id @default(autoincrement())
+  ref         String   @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   description String?
   creator     Creator  @relation(fields: [creatorId], references: [id])
   work        Work     @relation(fields: [workId], references: [id])
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   price       Decimal?
-  currency    String?  @db.VarChar(3)
+  currency    String?  @default("NGN") @db.VarChar(3)
   sellAs      String?  @db.VarChar(15)
   creatorId   Int
   workId      Int
@@ -250,7 +251,7 @@ model Contact {
   id        Int      @id @default(autoincrement())
   type      String   @db.VarChar(20)
   phone     String   @unique @db.VarChar(15)
-  email     String   @unique @db.VarChar(500)
+  email     String   @db.VarChar(500)
   address   String
   position  String?  @db.VarChar(100)
   createdAt DateTime @default(now())

@@ -1,8 +1,8 @@
 <template>
   <q-layout view="hHr lpR ffr">
-    <q-header class="text-dark bg-transparent" height-hint="98">
+    <q-header class="text-dark bg-glass-blur container mx-auto" height-hint="98">
       <q-toolbar>
-        <q-btn to="/" exact flat>
+        <q-btn to="/" exact flat class="q-pa-none">
           <q-img class="mini-logo-img" src="~assets/logo.png" />
         </q-btn>
         <q-space />
@@ -29,7 +29,10 @@
     </q-drawer>
 
     <q-page-container>
-      <router-view />
+      <q-scroll-observer @scroll="onScroll" />
+      <q-page padding class="bg-grey-1 container mx-auto">
+        <router-view />
+      </q-page>
     </q-page-container>
 
     <q-footer class="bg-grey-8 text-white">
@@ -45,23 +48,61 @@
   </q-layout>
 </template>
 
-<script>
+<script lang="ts">
 import { useQuasar } from 'quasar';
 import { ref } from 'vue';
+
 const $q = useQuasar();
+const rightDrawerOpen = ref(false);
+const showHeaderBg = ref(false);
+
+const onScroll = (info: {
+  position: {
+    top: number,
+    left: number
+  },
+  direction: string,
+  directionChanged: boolean,
+  delta: {
+    top: number,
+    left: number
+  },
+  inflectionPoint: {
+    top: number,
+    left: number
+  }
+}
+) => {
+
+  if (info.position && info.position.top >= 100)
+    showHeaderBg.value = true
+  else
+    showHeaderBg.value = false
+}
+
+const toggleRightDrawer = () => {
+  rightDrawerOpen.value = !rightDrawerOpen.value;
+  if ($q.screen.gt.sm === true)
+    rightDrawerOpen.value = false;
+}
 
 export default {
   setup() {
-    const rightDrawerOpen = ref(false);
 
     return {
       rightDrawerOpen,
-      toggleRightDrawer() {
-        rightDrawerOpen.value = !rightDrawerOpen.value;
-        if ($q.screen.gt.sm === true)
-          rightDrawerOpen.value = false;
-      },
+      toggleRightDrawer,
+      showHeaderBg,
+      onScroll
     };
   },
 };
 </script>
+
+<style scoped>
+.bg-glass-blur {
+  -webkit-backdrop-filter: blur(7px) !important;
+  backdrop-filter: blur(7px) !important;
+  background-color: #cacaca1a;
+}
+</style>

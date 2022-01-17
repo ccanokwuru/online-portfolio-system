@@ -2,7 +2,7 @@
   <q-layout view="lHh lpR lff">
     <q-header class="bg-white text-dark" height-hint="98">
       <q-toolbar>
-        <q-btn to="/" exact flat>
+        <q-btn to="/" exact flat class="q-pa-none">
           <q-img class="mini-logo-img" src="~assets/logo.png" />
         </q-btn>
 
@@ -38,7 +38,9 @@
     </q-drawer>
 
     <q-page-container>
-      <router-view />
+      <q-page padding class="bg-grey-1">
+        <router-view />
+      </q-page>
     </q-page-container>
   </q-layout>
 </template>

@@ -9,8 +9,6 @@
 /* eslint-env node */
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { configure } = require('quasar/wrappers');
-const UnoCSS = require('@unocss/webpack').default;
-const presetUno = require('@unocss/preset-uno').default;
 
 module.exports = configure(function (ctx) {
   return {
@@ -53,14 +51,6 @@ module.exports = configure(function (ctx) {
     // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-build
     build: {
       vueRouterMode: 'history', // available values: 'hash', 'history'
-
-      extendWebpack(cfg) {
-        cfg.plugins.push(
-          UnoCSS({
-            presets: [presetUno],
-          })
-        );
-      },
 
       // transpile: false,
       // publicPath: '/',
@@ -157,8 +147,8 @@ module.exports = configure(function (ctx) {
         description: 'Online Portfolio System For Artistic Creators',
         display: 'standalone',
         orientation: 'portrait',
-        background_color: '#ffffff',
-        theme_color: '#027be3',
+        background_color: '#fafafa',
+        theme_color: '#800000',
         icons: [
           {
             src: 'icons/icon-128x128.png',

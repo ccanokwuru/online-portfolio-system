@@ -1,8 +1,6 @@
-import { IUserUpdate, IRole, IRoleBody } from './../../interface';
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import { FastifyPluginAsync } from "fastify";
-import { IOneUserParams, ISignin, ISignup } from "../../interface";
-// import * as crypto from "crypto";
+import { IOneRef, ISignin, ISignup, IUserUpdate, IRole, IRoleBody, IContacts } from "../../interface";
 
 const prisma = new PrismaClient();
 const userRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
@@ -83,16 +81,15 @@ const userRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
     };
   });
 
-  fastify.get("s", async function (request, reply) {
+  fastify.get("/all", async function (request, reply) {
     const users = await prisma.user.findMany();
 
     if (!users) return reply.code(404).send({ msg: "users not found" });
 
-
     return reply.send(users);
   });
 
-  fastify.get<{ Params: IOneUserParams }>("/u/:ref", async function (request, reply) {
+  fastify.get<{ Params: IOneRef }>("/u/:ref", async function (request, reply) {
 
     const { ref } = request.params;
 
@@ -110,11 +107,9 @@ const userRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
         comments: true,
         sentMessage: true,
         recievedMessage: true,
-        sessions: true,
         jobs: true,
         orders: true,
         wishlist: true,
-
       }
     });
 
@@ -125,7 +120,7 @@ const userRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
     });
   });
 
-  fastify.post<{ Params: IOneUserParams, Body: IUserUpdate }>("/u/:ref/update", async function (request, reply) {
+  fastify.post<{ Params: IOneRef, Body: IUserUpdate }>("/u/:ref/update", async function (request, reply) {
 
     const { ref } = request.params;
     const { email, display_name, first_name, last_name, other_name } = request.body
@@ -149,7 +144,37 @@ const userRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
     });
   });
 
-  fastify.post<{ Params: IOneUserParams, Body: IRoleBody }>("/u/:ref/assign-role", async function (request, reply) {
+  fastify.post<{ Params: IOneRef, Body: IContacts }>("/u/:ref/add-contacts", async function (request, reply) {
+
+    const { ref } = request.params;
+    const { contacts } = request.body
+
+    const addContacts = await prisma.contact.createMany({
+      data: [
+        ...contacts,
+      ],
+      skipDuplicates: true,
+    })
+
+    if (!addContacts) return reply.code(403).send({ msg: "failed to create contacts" });
+
+    const user = await prisma.user.findUnique({
+      where: {
+        ref,
+      },
+      include: {
+        contacts: true,
+      }
+    });
+
+    if (!user) return reply.code(404).send({ msg: "user not found" });
+
+    return reply.send({
+      user
+    });
+  });
+
+  fastify.post<{ Params: IOneRef, Body: IRoleBody }>("/u/:ref/assign-role", async function (request, reply) {
 
     const { ref } = request.params;
     const { role } = request.body
