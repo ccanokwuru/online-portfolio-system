@@ -1,0 +1,102 @@
+routes
+    user
+        signup *
+        signin *
+        signout *
+        update *
+        add-contacts *
+        all-contacts *
+        add-interests *
+        all-interests *
+        remove-interests *
+        delete *
+        all *
+        single *
+    work
+        create * 
+        update *
+        react *
+        delete *
+        all *
+        single *
+        mark-favourite *
+        review *
+    post
+        create*
+        update*
+        comment*
+        react*
+        delete*
+        all*
+        single*
+        mark-favourite
+    job
+        create
+        update
+        react
+        delete
+        all
+        single
+    message
+        send
+        reply
+        all
+        single
+    badge
+        create
+        update
+        delete
+        all
+        single
+    skill
+        create
+        update
+        delete
+        all
+        single
+    order
+        create
+        update
+        delete
+        all
+        single
+    exhibition
+        create
+        update
+        react
+        review
+        delete
+        all
+        single
+        make-wish
+    creator
+        create
+        update
+        react
+        delete
+        all
+        all-favourite
+        single
+        make-favourite
+        react
+    admin
+        create
+        update
+        react
+        delete
+        all
+        single
+    studio
+        create
+        update
+        react
+        delete
+        all
+        single
+        mark-favourite
+        react
+    payment
+        withcard
+        bank
+
+

@@ -2,9 +2,10 @@ import { join } from "path";
 import AutoLoad, { AutoloadPluginOptions } from "fastify-autoload";
 import { FastifyPluginAsync } from "fastify";
 import fastifyCors from "fastify-cors";
-import { fastifyJwt } from "fastify-jwt";
 import { fastifyCookie, FastifyCookieOptions } from "fastify-cookie";
 import fastifyBcrypt from "fastify-bcrypt";
+import fastifyAuth from "fastify-auth";
+import { fastifyJwt } from "fastify-jwt";
 
 export type AppOptions = {
   // Place your custom options for app below here.
@@ -15,23 +16,28 @@ const app: FastifyPluginAsync<AppOptions> = async (
   opts
 ): Promise<void> => {
   // Place here your custom code!
-  fastify.register(fastifyJwt, {
-    secret: "prolifolio",
-  });
 
   fastify.register(fastifyCors, {
-    // origin: "*",
-    // allowedHeaders: ["Authorization", "Content-Type"],
+    origin: "*",
+    allowedHeaders: ["Authorization", "Content-Type"],
   });
 
   fastify.register(fastifyCookie, {
-    secret: "fastCookie",
+    secret: process.env.COOKIE_SECRET,
     parseOptions: {},
   } as FastifyCookieOptions);
 
   fastify.register(fastifyBcrypt, {
     saltWorkFactor: 10,
   });
+
+  fastify.register(fastifyAuth);
+
+  fastify.register(fastifyJwt, {
+    secret: "prolifolio"
+  })
+
+
   // Do not touch the following lines
 
   // This loads all plugins defined in plugins

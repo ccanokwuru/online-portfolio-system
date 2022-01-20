@@ -1,6 +1,6 @@
-import { Prisma, PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { FastifyPluginAsync } from "fastify";
-import { IOneRef, ISignin, ISignup, IUserUpdate, IRole, IRoleBody, IContacts } from "../../interface";
+import { IOneId, ISignin, ISignup, IUserUpdate, IRole, IRoleBody, IContacts, IManyId } from "../../interface";
 
 const prisma = new PrismaClient();
 const userRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
@@ -18,6 +18,16 @@ const userRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
         display_name,
         email,
         password: hash,
+        badges: {
+          connectOrCreate: {
+            where: {
+              name: "art enthusiast"
+            },
+            create: {
+              name: "art enthusiast"
+            },
+          }
+        },
       },
     });
 
@@ -26,17 +36,31 @@ const userRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
     const userInfo = {
       name: result.display_name,
       email: result.email,
-      role: result.role
+      role: result.role,
     };
+    const authToken = fastify.jwt.sign(userInfo)
 
-    const token = fastify.jwt.sign(userInfo);
-    reply.code(201).setCookie("token", token, {
+    const token = await prisma.token.create({
+      data: {
+        token: authToken,
+        user: {
+          connect: {
+            email: result.email
+          }
+        }
+      }
+    })
+
+    if (!token) return reply.code(401).send({ msg: "failed to create token" });
+
+    reply.code(201).setCookie("token", authToken, {
       httpOnly: true,
       path: "/",
       signed: true,
     });
     return {
-      result
+      token: authToken,
+      user: result
     };
   });
 
@@ -59,29 +83,71 @@ const userRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
     const userInfo = {
       name: user.display_name,
       email: user.email,
-      role: user.role
+      role: user.role,
     };
-    const token = fastify.jwt.sign(userInfo);
 
-    reply.code(200).setCookie("token", token, {
+    const authToken = fastify.jwt.sign(userInfo)
+
+    const token = await prisma.token.create({
+      data: {
+        token: authToken,
+        user: {
+          connect: {
+            email: user.email
+          }
+        }
+      }
+    })
+
+    if (!token) return reply.code(401).send({ msg: "failed to create token" });
+
+    reply.setCookie("token", authToken, {
       httpOnly: true,
+      path: "/",
       signed: true,
     });
-
     return {
-      user
+      token: authToken,
+      user: user
     };
   });
 
-  fastify.post("/signout", async function (request, reply) {
-    reply.clearCookie("token");
+  fastify.get("/signout", {
+    preHandler: fastify.auth([
+      // @ts-ignore
+      fastify.authenticate
+    ], { run: 'all' })
+  }, async function (request, reply) {
 
-    return {
-      msg: "Logout Successful",
-    };
+    // @ts-ignore
+    const { token } = request
+    if (typeof token === 'string' && token.length) {
+
+      await prisma.token.update({
+        where: {
+          token,
+        },
+        data: { expired: true }
+      })
+
+      reply.clearCookie("token");
+
+      return {
+        msg: "Logout Successful",
+        token: token,
+        user: request.user
+      };
+    }
+    else
+      return reply.code(401).send({ msg: "requires authentication" })
   });
 
-  fastify.get("/all", async function (request, reply) {
+  fastify.get("/all", {
+    preHandler: fastify.auth([
+      // @ts-ignore
+      fastify.authenticate, fastify.admin_auth
+    ])
+  }, async function (request, reply) {
     const users = await prisma.user.findMany();
 
     if (!users) return reply.code(404).send({ msg: "users not found" });
@@ -89,27 +155,23 @@ const userRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
     return reply.send(users);
   });
 
-  fastify.get<{ Params: IOneRef }>("/u/:ref", async function (request, reply) {
+  fastify.get<{ Params: IOneId }>("/u/:id", {
+    preHandler: fastify.auth([
+      // @ts-ignore
+      fastify.authenticate
+    ])
+  }, async function (request, reply) {
 
-    const { ref } = request.params;
+    const { id } = request.params;
 
     const user = await prisma.user.findUnique({
       where: {
-        ref,
+        id,
       },
       include: {
         interests: true,
-        contacts: true,
-        creator: true,
-        admin: true,
-        reviews: true,
         posts: true,
-        comments: true,
-        sentMessage: true,
-        recievedMessage: true,
         jobs: true,
-        orders: true,
-        wishlist: true,
       }
     });
 
@@ -120,9 +182,14 @@ const userRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
     });
   });
 
-  fastify.post<{ Params: IOneRef, Body: IUserUpdate }>("/u/:ref/update", async function (request, reply) {
+  fastify.post<{ Params: IOneId, Body: IUserUpdate }>("/u/:id/update", {
+    preHandler: fastify.auth([
+      // @ts-ignore
+      fastify.authenticate, fastify.current_user
+    ], { run: 'all' })
+  }, async function (request, reply) {
 
-    const { ref } = request.params;
+    const { id } = request.params;
     const { email, display_name, first_name, last_name, other_name } = request.body
 
     if (!email?.length || !display_name?.length || !first_name?.length || !last_name?.length || !other_name?.length)
@@ -130,7 +197,7 @@ const userRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 
     const user = await prisma.user.update({
       where: {
-        ref,
+        id,
       },
       data: {
         email, display_name, first_name, last_name, other_name,
@@ -144,26 +211,56 @@ const userRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
     });
   });
 
-  fastify.post<{ Params: IOneRef, Body: IContacts }>("/u/:ref/add-contacts", async function (request, reply) {
+  fastify.post<{ Params: IOneId, Body: IContacts }>("/u/:id/add-contacts", {
+    preHandler: fastify.auth([
+      // @ts-ignore
+      fastify.authenticate, fastify.current_user
+    ], { run: 'all' })
+  }, async function (request, reply) {
 
-    const { ref } = request.params;
-    const { contacts } = request.body
+    const { id } = request.params;
+    const { contacts } = request.body;
 
-    const addContacts = await prisma.contact.createMany({
-      data: [
-        ...contacts,
-      ],
-      skipDuplicates: true,
-    })
+    const user = await prisma.user.update({
+      where: {
+        id,
+      },
+      data: {
+        contacts: {
+          createMany: {
+            data: [
+              ...contacts
+            ]
+          }
+        }
+      },
+      include: {
+        contacts: true
+      }
+    });
 
-    if (!addContacts) return reply.code(403).send({ msg: "failed to create contacts" });
+    if (!user) return reply.code(404).send({ msg: "user not found" });
+
+    return reply.status(201).send({
+      user
+    });
+  });
+
+  fastify.get<{ Params: IOneId }>("/u/:id/all-contacts", {
+    preHandler: fastify.auth([
+      // @ts-ignore
+      fastify.authenticate, fastify.current_user
+    ], { run: 'all' })
+  }, async function (request, reply) {
+
+    const { id } = request.params;
 
     const user = await prisma.user.findUnique({
       where: {
-        ref,
+        id,
       },
       include: {
-        contacts: true,
+        contacts: true
       }
     });
 
@@ -174,66 +271,89 @@ const userRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
     });
   });
 
-  fastify.post<{ Params: IOneRef, Body: IRoleBody }>("/u/:ref/assign-role", async function (request, reply) {
+  fastify.post<{ Params: IOneId, Body: IManyId }>("/u/:id/add-interests", {
+    preHandler: fastify.auth([
+      // @ts-ignore
+      fastify.authenticate, fastify.current_user
+    ], { run: 'all' })
+  }, async function (request, reply) {
 
-    const { ref } = request.params;
-    const { role } = request.body
-
-    if (!role.length && role !== IRole.adm && role !== IRole.crt && role !== IRole.col)
-      return reply.status(403).send({ msg: "invalid role" })
+    const { id } = request.params;
+    const { ids } = request.body;
 
     const user = await prisma.user.update({
       where: {
-        ref,
+        id,
       },
       data: {
-        role
+        interests: {
+          connect: [
+            ...ids
+          ]
+        }
       },
+      include: {
+        interests: true
+      }
     });
 
-    if (role === IRole.crt) {
-      const crt = await prisma.creator.create({
-        data: {
-          userId: user.id,
-        }
-      })
-      if (!crt)
-        return reply.code(401).send({ msg: "creator account activation failed" });
+    if (!user) return reply.code(404).send({ msg: "user not found" });
 
-      const creator = await prisma.user.findUnique({
-        where: {
-          ref
-        },
-        include: {
-          creator: true,
-        },
-      })
-      return reply.status(201).send({
-        creator
-      })
-    }
+    return reply.status(201).send({
+      user
+    });
+  });
 
-    if (role === IRole.adm) {
-      const adm = await prisma.admin.create({
-        data: {
-          userId: user.id,
-        }
-      })
-      if (!adm)
-        return reply.code(401).send({ msg: "creator account activation failed" });
+  fastify.post<{ Params: IOneId, Body: IManyId }>("/u/:id/remove-interests", {
+    preHandler: fastify.auth([
+      // @ts-ignore
+      fastify.authenticate, fastify.current_user
+    ], { run: 'all' })
+  }, async function (request, reply) {
 
-      const admin = await prisma.user.findUnique({
-        where: {
-          ref
-        },
-        include: {
-          admin: true,
+    const { id } = request.params;
+    const { ids } = request.body;
+
+    const user = await prisma.user.update({
+      where: {
+        id,
+      },
+      data: {
+        interests: {
+          disconnect: [
+            ...ids
+          ]
         }
-      })
-      return reply.status(201).send({
-        admin
-      })
-    }
+      },
+      include: {
+        interests: true
+      }
+    });
+
+    if (!user) return reply.code(404).send({ msg: "user not found" });
+
+    return reply.status(201).send({
+      user
+    });
+  });
+
+  fastify.get<{ Params: IOneId }>("/u/:id/all-interests", {
+    preHandler: fastify.auth([
+      // @ts-ignore
+      fastify.authenticate,
+    ], { run: 'all' })
+  }, async function (request, reply) {
+
+    const { id } = request.params;
+
+    const user = await prisma.user.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        interests: true
+      }
+    });
 
     if (!user) return reply.code(404).send({ msg: "user not found" });
 
@@ -241,6 +361,112 @@ const userRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
       user
     });
   });
+
+  fastify.post<{ Params: IOneId, Body: IRoleBody }>("/u/:id/make_admin",
+    {
+      preHandler: fastify.auth([
+        // @ts-ignore
+        fastify.authenticate, fastify.admin_auth
+      ], { run: 'all' })
+    },
+    async function (request, reply) {
+
+      const { id } = request.params;
+      const { role } = request.body
+
+      if (role !== IRole.adm)
+        return reply.status(403).send({ msg: "invalid role" })
+
+      const admin = await prisma.user.update({
+        where: {
+          id: Number(id)
+        },
+        data: {
+          role,
+          creator: {
+            connectOrCreate: {
+              where: {
+                userId: Number(id),
+              },
+              create: {}
+            }
+          },
+          admin: {
+            connectOrCreate: {
+              where: {
+                userId: Number(id),
+              },
+              create: {}
+            }
+          }
+        },
+        include: { creator: true, admin: true }
+      })
+
+      if (!admin)
+        return reply.code(401).send({ msg: "account migration failed" });
+
+      return reply.status(201).send({
+        admin
+      })
+    });
+
+  fastify.post<{ Params: IOneId, Body: IRoleBody }>("/u/:id/remoke_admin",
+    // {
+    //   preHandler: fastify.auth([
+    //     // @ts-ignore
+    //     fastify.authenticate, fastify.admin_auth
+    //   ], { run: 'all' })
+    // },
+    async function (request, reply) {
+
+      const { id } = request.params;
+      const { role } = request.body
+
+      if (role !== IRole.adm)
+        return reply.status(403).send({ msg: "invalid role" })
+
+      const admin = await prisma.user.update({
+        where: {
+          id: Number(id)
+        },
+        data: {
+          role,
+          admin: {
+            disconnect: true
+          }
+        },
+        include: { creator: true, admin: true }
+      })
+
+      if (!admin)
+        return reply.code(401).send({ msg: "account migration failed" });
+
+      return reply.status(201).send({
+        admin
+      })
+    });
+
+  fastify.post<{ Body: IOneId }>("/u/:id/delete", {
+    preHandler: fastify.auth([
+      // @ts-ignore
+      fastify.authenticate, fastify.admin_auth, fastify.current_user
+    ], { run: 'all' })
+  }, async function (request, reply) {
+
+    const { id } = request.body
+
+    const user = await prisma.user.delete({
+      where: {
+        id
+      }
+    })
+
+    return reply.send({
+      user
+    });
+  });
+
 };
 
 export default userRoute;

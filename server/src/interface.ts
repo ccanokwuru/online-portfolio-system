@@ -1,19 +1,21 @@
 import { Decimal } from "@prisma/client/runtime"
 
-export interface IOneRef {
-  ref: string
-}
-
-export interface IManyRef {
-  refs: string[]
-}
-
 export interface IOneId {
   id: number
 }
 
+export interface IUserId {
+  userId: number
+}
+
 export interface IManyId {
-  ids: number[]
+  ids: IOneId[]
+}
+
+// imagesInfo
+export interface IImageInfo {
+  name: string,
+  url: string
 }
 
 // user related
@@ -69,6 +71,7 @@ export interface IStudioName {
 
 //  reactions related
 export interface IReact {
+  userId: number
   type: IReactions
 }
 
@@ -83,28 +86,64 @@ export interface IExhibition {
   price: Decimal
   currency: string
   sellAs: string
-  creatorId: number
-  workId?: number
-  categoryId?: number
-  studioId?: number
-  title?: string
+  creatorRef: string
+  work?: IWork
 }
 
 // contact related
 export interface IContact {
-  id: number
   type: IContactType
   phone: string
   email: string
   address: string
   position?: string
-  userId: number
 }
 
 export enum IContactType {
   main = "defualt",
   others = "others"
 }
+
 export interface IContacts {
   contacts: IContact[]
 }
+
+// skills related
+export interface ISkill {
+  categoryId: number
+  name: string
+  description: string
+}
+
+export interface ISkills {
+  skills: ISkill[]
+}
+
+// post related
+export interface IPost {
+  slug?: string
+  title: string
+  content: string
+}
+
+export interface ISlug {
+  slug: string
+}
+
+// comment related
+export interface IComment {
+  commentId: number
+  postId: number
+  message: string
+}
+
+// rewiew related
+export interface IReview {
+  rating: number
+  userId: number
+  comment?: string
+}
+
+
+
+

@@ -1,7 +1,6 @@
 -- CreateTable
 CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
-    "ref" UUID NOT NULL DEFAULT gen_random_uuid(),
     "first_name" VARCHAR(200),
     "last_name" VARCHAR(200),
     "other_name" VARCHAR(200),
@@ -18,7 +17,6 @@ CREATE TABLE "User" (
 -- CreateTable
 CREATE TABLE "Admin" (
     "id" SERIAL NOT NULL,
-    "ref" UUID NOT NULL DEFAULT gen_random_uuid(),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "userId" INTEGER NOT NULL,
@@ -29,7 +27,6 @@ CREATE TABLE "Admin" (
 -- CreateTable
 CREATE TABLE "Creator" (
     "id" SERIAL NOT NULL,
-    "ref" UUID NOT NULL DEFAULT gen_random_uuid(),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "userId" INTEGER NOT NULL,
@@ -57,6 +54,11 @@ CREATE TABLE "Reaction" (
     "type" VARCHAR(15) NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "creatorId" INTEGER,
+    "postId" INTEGER,
+    "workId" INTEGER,
+    "studioId" INTEGER,
 
     CONSTRAINT "Reaction_pkey" PRIMARY KEY ("id")
 );
@@ -88,12 +90,12 @@ CREATE TABLE "Category" (
 -- CreateTable
 CREATE TABLE "Review" (
     "id" SERIAL NOT NULL,
-    "comment" TEXT NOT NULL,
+    "comment" TEXT,
     "rating" DECIMAL(65,30) NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "userId" INTEGER NOT NULL,
-    "workId" INTEGER,
+    "workId" INTEGER NOT NULL,
 
     CONSTRAINT "Review_pkey" PRIMARY KEY ("id")
 );
@@ -101,13 +103,10 @@ CREATE TABLE "Review" (
 -- CreateTable
 CREATE TABLE "Message" (
     "id" SERIAL NOT NULL,
-    "ref" UUID NOT NULL DEFAULT gen_random_uuid(),
-    "senderId" INTEGER NOT NULL,
-    "recieverId" INTEGER NOT NULL,
+    "fromId" INTEGER NOT NULL,
     "message" TEXT NOT NULL,
     "p_messageId" INTEGER,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Message_pkey" PRIMARY KEY ("id")
 );
@@ -118,7 +117,7 @@ CREATE TABLE "Post" (
     "slug" VARCHAR(200) NOT NULL,
     "title" VARCHAR(200) NOT NULL,
     "content" TEXT NOT NULL,
-    "mainImage" VARCHAR(500) NOT NULL,
+    "mainImage" VARCHAR(500),
     "authorId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -129,7 +128,6 @@ CREATE TABLE "Post" (
 -- CreateTable
 CREATE TABLE "Comment" (
     "id" SERIAL NOT NULL,
-    "ref" UUID NOT NULL DEFAULT gen_random_uuid(),
     "postId" INTEGER,
     "p_commentId" INTEGER,
     "message" TEXT NOT NULL,
@@ -144,14 +142,13 @@ CREATE TABLE "Comment" (
 CREATE TABLE "Work" (
     "id" SERIAL NOT NULL,
     "title" VARCHAR(200) NOT NULL,
-    "ref" UUID NOT NULL DEFAULT gen_random_uuid(),
     "categoryId" INTEGER NOT NULL,
     "description" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "studioId" INTEGER,
     "creatorId" INTEGER NOT NULL,
-    "images" JSONB NOT NULL,
+    "images" JSONB,
 
     CONSTRAINT "Work_pkey" PRIMARY KEY ("id")
 );
@@ -159,7 +156,6 @@ CREATE TABLE "Work" (
 -- CreateTable
 CREATE TABLE "Order" (
     "id" SERIAL NOT NULL,
-    "ref" UUID NOT NULL DEFAULT gen_random_uuid(),
     "description" TEXT,
     "price" DECIMAL(65,30),
     "currency" VARCHAR(3),
@@ -174,7 +170,6 @@ CREATE TABLE "Order" (
 CREATE TABLE "Studio" (
     "id" SERIAL NOT NULL,
     "name" VARCHAR(100) NOT NULL,
-    "ref" UUID NOT NULL DEFAULT gen_random_uuid(),
     "description" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -189,7 +184,7 @@ CREATE TABLE "Exhibition" (
     "description" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "price" DECIMAL(65,30),
+    "price" MONEY,
     "currency" VARCHAR(3) DEFAULT E'NGN',
     "sellAs" VARCHAR(15),
     "creatorId" INTEGER NOT NULL,
@@ -229,13 +224,23 @@ CREATE TABLE "Contact" (
 -- CreateTable
 CREATE TABLE "Badge" (
     "id" SERIAL NOT NULL,
-    "type" VARCHAR(20),
+    "type" VARCHAR(20) DEFAULT E'general',
     "name" VARCHAR(50) NOT NULL,
-    "description" VARCHAR(500),
+    "description" VARCHAR(500) DEFAULT E'for all users',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Badge_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Token" (
+    "id" SERIAL NOT NULL,
+    "token" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "userId" INTEGER,
+
+    CONSTRAINT "Token_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -251,7 +256,13 @@ CREATE TABLE "_BadgeToUser" (
 );
 
 -- CreateTable
-CREATE TABLE "_UserToWork" (
+CREATE TABLE "_ExhibitionToUser" (
+    "A" INTEGER NOT NULL,
+    "B" INTEGER NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "_Recieved" (
     "A" INTEGER NOT NULL,
     "B" INTEGER NOT NULL
 );
@@ -269,37 +280,10 @@ CREATE TABLE "_CreatorToJob" (
 );
 
 -- CreateTable
-CREATE TABLE "_CreatorToReaction" (
-    "A" INTEGER NOT NULL,
-    "B" INTEGER NOT NULL
-);
-
--- CreateTable
-CREATE TABLE "_ReactionToWork" (
-    "A" INTEGER NOT NULL,
-    "B" INTEGER NOT NULL
-);
-
--- CreateTable
-CREATE TABLE "_PostToReaction" (
-    "A" INTEGER NOT NULL,
-    "B" INTEGER NOT NULL
-);
-
--- CreateTable
-CREATE TABLE "_ReactionToStudio" (
-    "A" INTEGER NOT NULL,
-    "B" INTEGER NOT NULL
-);
-
--- CreateTable
 CREATE TABLE "_OrderToWork" (
     "A" INTEGER NOT NULL,
     "B" INTEGER NOT NULL
 );
-
--- CreateIndex
-CREATE UNIQUE INDEX "User_ref_key" ON "User"("ref");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_display_name_key" ON "User"("display_name");
@@ -308,40 +292,22 @@ CREATE UNIQUE INDEX "User_display_name_key" ON "User"("display_name");
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Admin_ref_key" ON "Admin"("ref");
-
--- CreateIndex
 CREATE UNIQUE INDEX "Admin_userId_key" ON "Admin"("userId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Creator_ref_key" ON "Creator"("ref");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Creator_userId_key" ON "Creator"("userId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Category_name_key" ON "Category"("name");
+CREATE UNIQUE INDEX "Reaction_type_key" ON "Reaction"("type");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Message_ref_key" ON "Message"("ref");
+CREATE UNIQUE INDEX "Category_name_key" ON "Category"("name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Post_slug_key" ON "Post"("slug");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Comment_ref_key" ON "Comment"("ref");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Work_ref_key" ON "Work"("ref");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Order_ref_key" ON "Order"("ref");
-
--- CreateIndex
 CREATE UNIQUE INDEX "Studio_name_key" ON "Studio"("name");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Studio_ref_key" ON "Studio"("ref");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Studio_creatorId_key" ON "Studio"("creatorId");
@@ -350,10 +316,10 @@ CREATE UNIQUE INDEX "Studio_creatorId_key" ON "Studio"("creatorId");
 CREATE UNIQUE INDEX "Contact_phone_key" ON "Contact"("phone");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Contact_email_key" ON "Contact"("email");
+CREATE UNIQUE INDEX "Badge_name_key" ON "Badge"("name");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Badge_name_key" ON "Badge"("name");
+CREATE UNIQUE INDEX "Token_token_key" ON "Token"("token");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_SkillToUser_AB_unique" ON "_SkillToUser"("A", "B");
@@ -368,10 +334,16 @@ CREATE UNIQUE INDEX "_BadgeToUser_AB_unique" ON "_BadgeToUser"("A", "B");
 CREATE INDEX "_BadgeToUser_B_index" ON "_BadgeToUser"("B");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "_UserToWork_AB_unique" ON "_UserToWork"("A", "B");
+CREATE UNIQUE INDEX "_ExhibitionToUser_AB_unique" ON "_ExhibitionToUser"("A", "B");
 
 -- CreateIndex
-CREATE INDEX "_UserToWork_B_index" ON "_UserToWork"("B");
+CREATE INDEX "_ExhibitionToUser_B_index" ON "_ExhibitionToUser"("B");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "_Recieved_AB_unique" ON "_Recieved"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_Recieved_B_index" ON "_Recieved"("B");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_CreatorToSkill_AB_unique" ON "_CreatorToSkill"("A", "B");
@@ -384,30 +356,6 @@ CREATE UNIQUE INDEX "_CreatorToJob_AB_unique" ON "_CreatorToJob"("A", "B");
 
 -- CreateIndex
 CREATE INDEX "_CreatorToJob_B_index" ON "_CreatorToJob"("B");
-
--- CreateIndex
-CREATE UNIQUE INDEX "_CreatorToReaction_AB_unique" ON "_CreatorToReaction"("A", "B");
-
--- CreateIndex
-CREATE INDEX "_CreatorToReaction_B_index" ON "_CreatorToReaction"("B");
-
--- CreateIndex
-CREATE UNIQUE INDEX "_ReactionToWork_AB_unique" ON "_ReactionToWork"("A", "B");
-
--- CreateIndex
-CREATE INDEX "_ReactionToWork_B_index" ON "_ReactionToWork"("B");
-
--- CreateIndex
-CREATE UNIQUE INDEX "_PostToReaction_AB_unique" ON "_PostToReaction"("A", "B");
-
--- CreateIndex
-CREATE INDEX "_PostToReaction_B_index" ON "_PostToReaction"("B");
-
--- CreateIndex
-CREATE UNIQUE INDEX "_ReactionToStudio_AB_unique" ON "_ReactionToStudio"("A", "B");
-
--- CreateIndex
-CREATE INDEX "_ReactionToStudio_B_index" ON "_ReactionToStudio"("B");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_OrderToWork_AB_unique" ON "_OrderToWork"("A", "B");
@@ -437,6 +385,21 @@ ALTER TABLE "Favourite" ADD CONSTRAINT "Favourite_studioId_fkey" FOREIGN KEY ("s
 ALTER TABLE "Favourite" ADD CONSTRAINT "Favourite_creatorId_fkey" FOREIGN KEY ("creatorId") REFERENCES "Creator"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "Reaction" ADD CONSTRAINT "Reaction_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Reaction" ADD CONSTRAINT "Reaction_creatorId_fkey" FOREIGN KEY ("creatorId") REFERENCES "Creator"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Reaction" ADD CONSTRAINT "Reaction_postId_fkey" FOREIGN KEY ("postId") REFERENCES "Post"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Reaction" ADD CONSTRAINT "Reaction_workId_fkey" FOREIGN KEY ("workId") REFERENCES "Work"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Reaction" ADD CONSTRAINT "Reaction_studioId_fkey" FOREIGN KEY ("studioId") REFERENCES "Studio"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "Skill" ADD CONSTRAINT "Skill_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -446,13 +409,10 @@ ALTER TABLE "Category" ADD CONSTRAINT "Category_p_categoryId_fkey" FOREIGN KEY (
 ALTER TABLE "Review" ADD CONSTRAINT "Review_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Review" ADD CONSTRAINT "Review_workId_fkey" FOREIGN KEY ("workId") REFERENCES "Work"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Review" ADD CONSTRAINT "Review_workId_fkey" FOREIGN KEY ("workId") REFERENCES "Work"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Message" ADD CONSTRAINT "Message_senderId_fkey" FOREIGN KEY ("senderId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Message" ADD CONSTRAINT "Message_recieverId_fkey" FOREIGN KEY ("recieverId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Message" ADD CONSTRAINT "Message_fromId_fkey" FOREIGN KEY ("fromId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Message" ADD CONSTRAINT "Message_p_messageId_fkey" FOREIGN KEY ("p_messageId") REFERENCES "Message"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -500,6 +460,9 @@ ALTER TABLE "Job" ADD CONSTRAINT "Job_ownerId_fkey" FOREIGN KEY ("ownerId") REFE
 ALTER TABLE "Contact" ADD CONSTRAINT "Contact_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "Token" ADD CONSTRAINT "Token_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "_SkillToUser" ADD FOREIGN KEY ("A") REFERENCES "Skill"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -512,10 +475,16 @@ ALTER TABLE "_BadgeToUser" ADD FOREIGN KEY ("A") REFERENCES "Badge"("id") ON DEL
 ALTER TABLE "_BadgeToUser" ADD FOREIGN KEY ("B") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_UserToWork" ADD FOREIGN KEY ("A") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_ExhibitionToUser" ADD FOREIGN KEY ("A") REFERENCES "Exhibition"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_UserToWork" ADD FOREIGN KEY ("B") REFERENCES "Work"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_ExhibitionToUser" ADD FOREIGN KEY ("B") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_Recieved" ADD FOREIGN KEY ("A") REFERENCES "Message"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_Recieved" ADD FOREIGN KEY ("B") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_CreatorToSkill" ADD FOREIGN KEY ("A") REFERENCES "Creator"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -528,30 +497,6 @@ ALTER TABLE "_CreatorToJob" ADD FOREIGN KEY ("A") REFERENCES "Creator"("id") ON 
 
 -- AddForeignKey
 ALTER TABLE "_CreatorToJob" ADD FOREIGN KEY ("B") REFERENCES "Job"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "_CreatorToReaction" ADD FOREIGN KEY ("A") REFERENCES "Creator"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "_CreatorToReaction" ADD FOREIGN KEY ("B") REFERENCES "Reaction"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "_ReactionToWork" ADD FOREIGN KEY ("A") REFERENCES "Reaction"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "_ReactionToWork" ADD FOREIGN KEY ("B") REFERENCES "Work"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "_PostToReaction" ADD FOREIGN KEY ("A") REFERENCES "Post"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "_PostToReaction" ADD FOREIGN KEY ("B") REFERENCES "Reaction"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "_ReactionToStudio" ADD FOREIGN KEY ("A") REFERENCES "Reaction"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "_ReactionToStudio" ADD FOREIGN KEY ("B") REFERENCES "Studio"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_OrderToWork" ADD FOREIGN KEY ("A") REFERENCES "Order"("id") ON DELETE CASCADE ON UPDATE CASCADE;
