@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  html {
+    @apply bg-gray-300;
+  }
+
+  .btn {
+    @apply py-2
+            px-3
+            md:py-3 md:px-5
+            md:font-semibold
+            rounded-lg;
+  }
+}
