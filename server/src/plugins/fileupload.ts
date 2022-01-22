@@ -3,7 +3,7 @@ import fp from 'fastify-plugin';
 import multer from 'fastify-multer';
 
 const setPath = (routerPath: String) => {
-  return `../../uploads/${routerPath.split('/')[1]}/`
+  return `../uploads/${routerPath.split('/')[1]}/`
 }
 
 module.exports = fp(async function (fastify, opts) {
@@ -11,9 +11,10 @@ module.exports = fp(async function (fastify, opts) {
   fastify.register(multer.contentParser);
 
   fastify.decorate("upload_single", async (request: FastifyRequest, reply: FastifyReply) => {
-    const { routerPath } = request
+    const { url } = request
 
-    const path = setPath(routerPath)
+    console.log(url)
+    const path = setPath(url)
     const upload = multer({ dest: path })
     // @ts-ignore
     const file = request.body.file
@@ -28,6 +29,7 @@ module.exports = fp(async function (fastify, opts) {
   fastify.decorate("upload_multi", async (request: FastifyRequest, reply: FastifyReply) => {
     const { routerPath } = request
 
+    console.log(routerPath)
     const path = setPath(routerPath)
     const upload = multer({ dest: path })
     // @ts-ignore

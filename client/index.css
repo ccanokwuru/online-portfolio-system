@@ -4,7 +4,7 @@
 
 @layer components {
   html {
-    @apply bg-gray-300;
+    @apply bg-[#F4F3F3];
   }
 
   .btn {

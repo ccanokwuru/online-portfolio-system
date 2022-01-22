@@ -7,9 +7,9 @@ const userRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
   fastify.post<{ Body: ISignup }>("/signup", async function (request, reply) {
     const { email, password, confirm, display_name } = request.body;
     if (!email.length || !password.length || !confirm.length || !display_name.length)
-      return reply.code(401).send({ msg: "missing fields" });
+      return reply.code(401).send({ message: "missing fields" });
     if (password !== confirm)
-      return reply.code(401).send({ msg: "passwords do not match" });
+      return reply.code(401).send({ message: "passwords do not match" });
 
     const hash = await fastify.bcrypt.hash(password);
 
@@ -18,20 +18,10 @@ const userRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
         display_name,
         email,
         password: hash,
-        badges: {
-          connectOrCreate: {
-            where: {
-              name: "art enthusiast"
-            },
-            create: {
-              name: "art enthusiast"
-            },
-          }
-        },
       },
     });
 
-    if (!result) return reply.code(409).send({ msg: "user already exits" });
+    if (!result) return reply.code(409).send({ message: "user already exits" });
 
     const userInfo = {
       name: result.display_name,
@@ -51,7 +41,7 @@ const userRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
       }
     })
 
-    if (!token) return reply.code(401).send({ msg: "failed to create token" });
+    if (!token) return reply.code(401).send({ message: "failed to create token" });
 
     reply.code(201).setCookie("token", authToken, {
       httpOnly: true,
@@ -73,12 +63,12 @@ const userRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
       },
     });
 
-    if (!user) return reply.code(401).send({ msg: "user not found" });
+    if (!user) return reply.code(401).send({ message: "user not found" });
 
     const match = await fastify.bcrypt.compare(password, user?.password);
 
     if (!match) {
-      return reply.code(401).send({ msg: "email or password is wrong" });
+      return reply.code(401).send({ message: "email or password is wrong" });
     }
     const userInfo = {
       name: user.display_name,
@@ -99,7 +89,7 @@ const userRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
       }
     })
 
-    if (!token) return reply.code(401).send({ msg: "failed to create token" });
+    if (!token) return reply.code(401).send({ message: "failed to create token" });
 
     reply.setCookie("token", authToken, {
       httpOnly: true,
@@ -133,13 +123,11 @@ const userRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
       reply.clearCookie("token");
 
       return {
-        msg: "Logout Successful",
-        token: token,
-        user: request.user
+        message: "Logout Successful",
       };
     }
     else
-      return reply.code(401).send({ msg: "requires authentication" })
+      return reply.code(401).send({ message: "requires authentication" })
   });
 
   fastify.get("/all", {
@@ -150,7 +138,7 @@ const userRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
   }, async function (request, reply) {
     const users = await prisma.user.findMany();
 
-    if (!users) return reply.code(404).send({ msg: "users not found" });
+    if (!users) return reply.code(404).send({ message: "users not found" });
 
     return reply.send(users);
   });
@@ -175,7 +163,7 @@ const userRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
       }
     });
 
-    if (!user) return reply.code(404).send({ msg: "user not found" });
+    if (!user) return reply.code(404).send({ message: "user not found" });
 
     return reply.send({
       user
@@ -193,7 +181,7 @@ const userRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
     const { email, display_name, first_name, last_name, other_name } = request.body
 
     if (!email?.length || !display_name?.length || !first_name?.length || !last_name?.length || !other_name?.length)
-      return reply.code(401).send({ msg: "missing fields" });
+      return reply.code(401).send({ message: "missing fields" });
 
     const user = await prisma.user.update({
       where: {
@@ -204,7 +192,7 @@ const userRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
       },
     });
 
-    if (!user) return reply.code(404).send({ msg: "user not found" });
+    if (!user) return reply.code(404).send({ message: "user not found" });
 
     return reply.send({
       user
@@ -239,7 +227,7 @@ const userRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
       }
     });
 
-    if (!user) return reply.code(404).send({ msg: "user not found" });
+    if (!user) return reply.code(404).send({ message: "user not found" });
 
     return reply.status(201).send({
       user
@@ -264,7 +252,7 @@ const userRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
       }
     });
 
-    if (!user) return reply.code(404).send({ msg: "user not found" });
+    if (!user) return reply.code(404).send({ message: "user not found" });
 
     return reply.send({
       user
@@ -297,7 +285,7 @@ const userRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
       }
     });
 
-    if (!user) return reply.code(404).send({ msg: "user not found" });
+    if (!user) return reply.code(404).send({ message: "user not found" });
 
     return reply.status(201).send({
       user
@@ -330,7 +318,7 @@ const userRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
       }
     });
 
-    if (!user) return reply.code(404).send({ msg: "user not found" });
+    if (!user) return reply.code(404).send({ message: "user not found" });
 
     return reply.status(201).send({
       user
@@ -355,13 +343,53 @@ const userRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
       }
     });
 
-    if (!user) return reply.code(404).send({ msg: "user not found" });
+    if (!user) return reply.code(404).send({ message: "user not found" });
 
     return reply.send({
       user
     });
   });
 
+  fastify.post<{ Params: IOneId, Body: IRoleBody }>("/u/:id/make_creator",
+    {
+      preHandler: fastify.auth([
+        // @ts-ignore
+        fastify.authenticate,
+      ], { run: 'all' })
+    },
+    async function (request, reply) {
+
+      const { id } = request.params;
+      const { role } = request.body
+
+      if (role !== IRole.crt)
+        return reply.status(403).send({ message: "invalid role" })
+
+      const creator = await prisma.user.update({
+        where: {
+          id: Number(id)
+        },
+        data: {
+          role,
+          creator: {
+            connectOrCreate: {
+              where: {
+                userId: Number(id),
+              },
+              create: {}
+            }
+          },
+        },
+        include: { creator: true, }
+      })
+
+      if (!creator)
+        return reply.code(401).send({ message: "account migration failed" });
+
+      return reply.status(201).send({
+        creator
+      })
+    });
   fastify.post<{ Params: IOneId, Body: IRoleBody }>("/u/:id/make_admin",
     {
       preHandler: fastify.auth([
@@ -375,7 +403,7 @@ const userRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
       const { role } = request.body
 
       if (role !== IRole.adm)
-        return reply.status(403).send({ msg: "invalid role" })
+        return reply.status(403).send({ message: "invalid role" })
 
       const admin = await prisma.user.update({
         where: {
@@ -404,7 +432,40 @@ const userRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
       })
 
       if (!admin)
-        return reply.code(401).send({ msg: "account migration failed" });
+        return reply.code(401).send({ message: "account migration failed" });
+
+      return reply.status(201).send({
+        admin
+      })
+    });
+
+  fastify.post<{ Params: IOneId, Body: IRoleBody }>("/u/:id/remoke_creator",
+    {
+      preHandler: fastify.auth([
+        // @ts-ignore
+        fastify.authenticate, fastify.admin_auth
+      ], { run: 'all' })
+    },
+    async function (request, reply) {
+
+      const { id } = request.params;
+
+
+      const admin = await prisma.user.update({
+        where: {
+          id: Number(id)
+        },
+        data: {
+          role: IRole.col,
+          creator: {
+            disconnect: true
+          }
+        },
+        include: { creator: true }
+      })
+
+      if (!admin)
+        return reply.code(401).send({ message: "account migration failed" });
 
       return reply.status(201).send({
         admin
@@ -412,26 +473,22 @@ const userRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
     });
 
   fastify.post<{ Params: IOneId, Body: IRoleBody }>("/u/:id/remoke_admin",
-    // {
-    //   preHandler: fastify.auth([
-    //     // @ts-ignore
-    //     fastify.authenticate, fastify.admin_auth
-    //   ], { run: 'all' })
-    // },
+    {
+      preHandler: fastify.auth([
+        // @ts-ignore
+        fastify.authenticate, fastify.admin_auth
+      ], { run: 'all' })
+    },
     async function (request, reply) {
 
       const { id } = request.params;
-      const { role } = request.body
-
-      if (role !== IRole.adm)
-        return reply.status(403).send({ msg: "invalid role" })
 
       const admin = await prisma.user.update({
         where: {
           id: Number(id)
         },
         data: {
-          role,
+          role: IRole.crt,
           admin: {
             disconnect: true
           }
@@ -440,7 +497,7 @@ const userRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
       })
 
       if (!admin)
-        return reply.code(401).send({ msg: "account migration failed" });
+        return reply.code(401).send({ message: "account migration failed" });
 
       return reply.status(201).send({
         admin

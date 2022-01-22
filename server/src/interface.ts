@@ -144,6 +144,25 @@ export interface IReview {
   comment?: string
 }
 
+// category related
+export interface ICategory {
+  name: string
+  description?: string
+  p_categoryId?: string
+}
 
+// job related
+export interface IJob {
+  title: string
+  categoryId: string
+  description?: string
+}
 
+// file related
+export interface IFile {
+  file: object
+}
 
+export interface IFiles {
+  files: object[]
+}

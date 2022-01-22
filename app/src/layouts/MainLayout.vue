@@ -1,108 +1,140 @@
 <template>
-  <q-layout view="hHr lpR ffr">
-    <q-header class="text-dark bg-glass-blur container mx-auto" height-hint="98">
-      <q-toolbar>
-        <q-btn to="/" exact flat class="q-pa-none">
-          <q-img class="mini-logo-img" src="~assets/logo.png" />
-        </q-btn>
+  <q-layout view="lHh lpR lff">
+    <q-header class="bg-white text-dark q-py-sm" height-hint="98">
+      <q-toolbar align="right" style="width: 95%;">
         <q-space />
-        <q-tabs align="center" class="gt-sm">
-          <q-route-tab to="/" label="Home" exact no-caps />
-          <q-route-tab to="/exhibitions" label="Exhibitions" exact no-caps />
-          <q-route-tab to="/creators" label="Creators" exact no-caps />
-          <q-route-tab to="/news" label="News" exact no-caps />
-        </q-tabs>
-        <q-space />
-        <q-btn color="red-10" label="Signin" rounded flat text-color="red-10" no-caps />
-        <q-btn dense flat round icon="bi-list" @click="toggleRightDrawer" class="lt-md" />
+        <Avatar class="q-pr-sm" />
+
+        <div>
+          <q-btn
+            color="grey"
+            text-color="grey"
+            icon="bi-chevron-down"
+            round
+            flat
+            dense
+            size=".5em"
+          />
+          <q-menu transition-show="scale" transition-hide="scale">
+            <q-list style="min-width: 100px">
+              <q-item clickable>
+                <q-item-section>Having fun</q-item-section>
+              </q-item>
+              <q-item clickable>
+                <q-item-section>Crazy for transitions</q-item-section>
+              </q-item>
+              <q-separator />
+              <q-item clickable>
+                <q-item-section>Mind blown</q-item-section>
+              </q-item>
+            </q-list>
+          </q-menu>
+        </div>
+
+        <q-separator vertical size="2px" class="q-mx-lg q-my-sm" />
+        <div class="q-mr-lg q-pr-md row q-gutter-md">
+          <q-btn
+            color="grey"
+            text-color="grey"
+            icon="bi-bell"
+            flat
+            round
+            dense
+            @click="onClick"
+            class="text-sm"
+            size=".5em"
+          />
+          <q-btn
+            color="grey"
+            text-color="grey"
+            flat
+            round
+            dense
+            icon="bi-eye"
+            @click="onClick"
+            class="text-sm"
+            size=".5em"
+          />
+        </div>
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="rightDrawerOpen" side="right" elevated v-if="$q.screen.lt.md">
+    <q-drawer side="left" class="bg-grey-8 text-white" v-model="leftDrawerOpen" :width="75">
+      <div class="flex flex-center q-py-sm">
+        <q-btn to="/" exact flat class="q-pa-none">
+          <q-img class="mini-logo-img" src="~assets/logo.png" />
+        </q-btn>
+      </div>
       <!-- drawer content -->
-      <q-list>
-        <q-item clickable v-ripple to="/" exact>Home</q-item>
-        <q-item clickable v-ripple to="/exhibitions" exact>Exhibitions</q-item>
-        <q-item clickable v-ripple to="/creators" exact>Creators</q-item>
-        <q-item clickable v-ripple to="/news" exact>News</q-item>
+      <q-list padding>
+        <q-item clickable v-ripple to="/" exact>
+          <q-item-section class="flex flex-center">
+            <q-tooltip>Dashboard</q-tooltip>
+            <q-icon color="white" name="bi-house" />
+          </q-item-section>
+        </q-item>
+        <q-item clickable v-ripple to="/stats" exact>
+          <q-item-section class="flex flex-center">
+            <q-tooltip>Statistics</q-tooltip>
+            <q-icon color="white" name="bi-bar-chart" />
+          </q-item-section>
+        </q-item>
+        <q-item clickable v-ripple to="/studio" exact>
+          <q-item-section class="flex flex-center">
+            <q-tooltip>Studio</q-tooltip>
+            <q-icon color="white" name="bi-file-earmark" />
+          </q-item-section>
+        </q-item>
+        <q-item clickable v-ripple to="/chat" exact>
+          <q-item-section class="flex flex-center">
+            <q-tooltip>Chats</q-tooltip>
+            <q-icon color="white" name="bi-chat-left" />
+          </q-item-section>
+        </q-item>
+        <q-item clickable v-ripple to="/works" exact>
+          <q-item-section class="flex flex-center">
+            <q-tooltip>Works</q-tooltip>
+            <q-icon color="white" name="bi-brush" />
+          </q-item-section>
+        </q-item>
+        <q-item clickable v-ripple to="/skills" exact>
+          <q-item-section class="flex flex-center">
+            <q-tooltip>Skills</q-tooltip>
+            <q-icon color="white" name="bi-vector-pen" />
+          </q-item-section>
+        </q-item>
+        <q-item clickable v-ripple to="/post" exact>
+          <q-item-section class="flex flex-center">
+            <q-tooltip>Posts</q-tooltip>
+            <q-icon color="white" name="bi-view-list" />
+          </q-item-section>
+        </q-item>
       </q-list>
     </q-drawer>
 
     <q-page-container>
-      <q-scroll-observer @scroll="onScroll" />
-      <q-page padding class="bg-grey-1 container mx-auto">
+      <q-page padding class="bg-grey-1">
         <router-view />
       </q-page>
     </q-page-container>
-
-    <q-footer class="bg-grey-8 text-white">
-      <q-toolbar>
-        <q-toolbar-title>&copy; Prolifolio</q-toolbar-title>
-        <q-space />
-        <div class="text-right">
-          <q-btn color="white" icon="bi-youtube" flat text-color="white" round />
-          <q-btn color="white" icon="bi-twitter" flat text-color="white" round />
-        </div>
-      </q-toolbar>
-    </q-footer>
   </q-layout>
 </template>
 
-<script lang="ts">
-import { useQuasar } from 'quasar';
+<script>
 import { ref } from 'vue';
-
-const $q = useQuasar();
-const rightDrawerOpen = ref(false);
-const showHeaderBg = ref(false);
-
-const onScroll = (info: {
-  position: {
-    top: number,
-    left: number
-  },
-  direction: string,
-  directionChanged: boolean,
-  delta: {
-    top: number,
-    left: number
-  },
-  inflectionPoint: {
-    top: number,
-    left: number
-  }
-}
-) => {
-
-  if (info.position && info.position.top >= 100)
-    showHeaderBg.value = true
-  else
-    showHeaderBg.value = false
-}
-
-const toggleRightDrawer = () => {
-  rightDrawerOpen.value = !rightDrawerOpen.value;
-  if ($q.screen.gt.sm === true)
-    rightDrawerOpen.value = false;
-}
+import Avatar from 'src/components/Avatar.vue';
+const leftDrawerOpen = ref(true);
+const toggleLeftDrawerOpen = () => leftDrawerOpen.value = !leftDrawerOpen.value
 
 export default {
+  components: {
+    Avatar,
+  },
   setup() {
-
     return {
-      rightDrawerOpen,
-      toggleRightDrawer,
-      showHeaderBg,
-      onScroll
+      leftDrawerOpen,
+      toggleLeftDrawerOpen
     };
   },
 };
 </script>
-
-<style scoped>
-.bg-glass-blur {
-  -webkit-backdrop-filter: blur(7px) !important;
-  backdrop-filter: blur(7px) !important;
-  background-color: #cacaca1a;
-}
-</style>

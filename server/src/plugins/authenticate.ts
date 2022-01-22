@@ -12,7 +12,7 @@ module.exports = fp(async function (fastify, opts) {
       const userToken = authorization?.startsWith('Bearer ') ? authorization.split(' ')[1] : token
 
       if (!userToken)
-        return reply.code(401).send({ msg: "requires authentication" })
+        return reply.code(401).send({ message: "requires authentication" })
 
       const user = fastify.jwt.verify(userToken)
 
@@ -22,23 +22,25 @@ module.exports = fp(async function (fastify, opts) {
         }
       })
 
-      if (!authToken) return reply.code(401).send({ msg: "invalid session token" });
+      if (!authToken) return reply.code(401).send({ message: "invalid session token" });
 
       // @ts-ignore
       const over = new Date(authToken.createdAt).getTime() < new Date(Date.now()).getTime() - (3600000 * 24)
 
       if (over) {
-        await prisma.token.update({
+        const expire = await prisma.token.update({
           where: {
             token,
           },
           data: { expired: true }
         })
-        return reply.code(401).send({ msg: "session expired" });
+        if (expire)
+          console.log(expire)
+        return reply.code(401).send({ message: "session expired and you have been signed out" });
       }
 
       const expired = authToken.expired
-      if (expired) return reply.code(401).send({ msg: "session expired" });
+      if (expired) return reply.code(401).send({ message: "session expired and you have been signed out" });
 
       request.user = user
       // @ts-ignore
@@ -51,13 +53,13 @@ module.exports = fp(async function (fastify, opts) {
   fastify.decorate("creator_auth", (request: FastifyRequest, reply: FastifyReply) => {
 
     // @ts-ignore
-    if (request.user.role === "collector") return reply.code(401).send({ msg: " you are not authorised for this" })
+    if (request.user.role && request.user.role === "collector") return reply.code(401).send({ message: " you are not authorised for this" })
   })
 
   fastify.decorate("admin_auth", (request: FastifyRequest, reply: FastifyReply) => {
 
     // @ts-ignore
-    if (request.user.role !== "admin") return reply.code(401).send({ msg: " you are not authorised for this" })
+    if (request.user.role && request.user.role !== "admin") return reply.code(401).send({ message: " you are not authorised for this" })
   })
 
   fastify.decorate("current_user", async (request: FastifyRequest, reply: FastifyReply) => {
@@ -74,7 +76,7 @@ module.exports = fp(async function (fastify, opts) {
     })
 
     // @ts-ignore
-    if (user?.id !== id || user?.id !== userId) return reply.code(401).send({ msg: " you are not authorised for this" })
+    if (user?.id !== id || user?.id !== userId) return reply.code(401).send({ message: " you are not authorised for this" })
   })
 
   fastify.decorate("current_userId", async (request: FastifyRequest, reply: FastifyReply) => {
@@ -90,11 +92,32 @@ module.exports = fp(async function (fastify, opts) {
 
     // @ts-ignore
     if (
-      user?.id !== userId,
-      user?.id !== ownerId,
-      user?.id !== creatorId,
+      user?.id !== userId ||
+      user?.id !== ownerId ||
+      user?.id !== creatorId ||
       user?.id !== authorId
-    ) return reply.code(401).send({ msg: " you are not authorised for this" })
+    ) return reply.code(401).send({ message: " you are not authorised for this" })
+  })
+
+  fastify.decorate("current_userId_admin", async (request: FastifyRequest, reply: FastifyReply) => {
+    // @ts-ignore
+    const { userId, ownerId, creatorId, authorId } = request.body
+
+    const user = await prisma.user.findUnique({
+      where: {
+        // @ts-ignore
+        email: request.user.email
+      }
+    })
+
+    if (
+      user?.id !== userId ||
+      user?.id !== ownerId ||
+      user?.id !== creatorId ||
+      user?.id !== authorId ||
+      // @ts-ignore
+      request.user.role !== "admin"
+    ) return reply.code(401).send({ message: " you are not authorised for this" })
   })
 })
 

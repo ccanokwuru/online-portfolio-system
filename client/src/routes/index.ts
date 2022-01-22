@@ -1,8 +1,10 @@
 import { RouteRecordRaw } from 'vue-router';
+// Layouts
 import MainLayout from '../layouts/MainLayout.vue'
 import StudioLayout from '../layouts/StudioLayout.vue'
 import GalleryLayout from '../layouts/GalleryLayout.vue'
 
+// Pages
 import NotFound from '../pages/NotFound.vue';
 import Index from '../pages/Index.vue';
 
@@ -12,7 +14,7 @@ const main: RouteRecordRaw = {
     component: MainLayout,
     children: [
         { path: "", name: "home", component: Index },
-        { path: "artists", name: "home", component: Index },
+        { path: "artists", name: "artists", component: Index },
         { path: "news", name: "news", component: Index },
     ],
 }
