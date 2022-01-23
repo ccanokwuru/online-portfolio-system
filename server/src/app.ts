@@ -19,7 +19,6 @@ const app: FastifyPluginAsync<AppOptions> = async (
 
   fastify.register(fastifyCors, {
     origin: "*",
-    allowedHeaders: ["Authorization", "Content-Type"],
   });
 
   fastify.register(fastifyCookie, {
@@ -37,6 +36,7 @@ const app: FastifyPluginAsync<AppOptions> = async (
     secret: "prolifolio"
   })
 
+  fastify.register(FastifyFormidable)
 
   // Do not touch the following lines
 

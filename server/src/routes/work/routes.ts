@@ -9,14 +9,16 @@ const worksRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
   fastify.post<{ Body: IWork }>("/create", {
     preHandler: fastify.auth([
       // @ts-ignore
-      fastify.authenticate, fastify.creator_auth, fastify.current_userId, fastify.upload_multi
+      fastify.authenticate, fastify.creator_auth, fastify.current_userId
     ], { run: 'all' })
   }, async function (request, reply) {
-    const { title, categoryId, description, studioId } = request.body
+    const { title, categoryId, description, studioId, files } = request.body
+
+    if (!title && !categoryId && !description && !studioId)
+      return reply.code(501).send({ message: "Something went wrong" })
 
     // @ts-ignore
     const { files } = request.files
-
     let images: { main: IImageInfo, others: IImageInfo[] } | "" = ""
 
     // @ts-ignore
@@ -26,14 +28,14 @@ const worksRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
         images.main = {
           name: slugger(title),
           // @ts-ignore
-          url: `http://localhost:5000/assets/${request.uploadPath.replace("../../uploads/", "")}`
+          url: `http://localhost:5000/${request.uploadPath.replace("../../uploads/", "")}`
         }
 
       // @ts-ignore
       images.others.push({
         name: slugger(title),
         // @ts-ignore
-        url: `http://localhost:5000/assets/${request.uploadPath.replace("../../uploads/", "")}`
+        url: `http://localhost:5000/${request.uploadPath.replace("../../uploads/", "")}`
       })
     });
 
@@ -41,7 +43,7 @@ const worksRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
       data: {
         description,
         title,
-        images: JSON.stringify(images),
+        files: JSON.stringify(images),
         creator: {
           connect: {
             // @ts-ignore
@@ -63,6 +65,7 @@ const worksRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
         creator: true
       }
     });
+
     return {
       work
     };

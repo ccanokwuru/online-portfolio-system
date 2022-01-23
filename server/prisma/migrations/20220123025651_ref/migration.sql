@@ -147,8 +147,12 @@ CREATE TABLE "Work" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "studioId" INTEGER,
+    "price" MONEY,
+    "currency" VARCHAR(3) DEFAULT E'NGN',
+    "sellAs" VARCHAR(15),
     "creatorId" INTEGER NOT NULL,
     "images" JSONB,
+    "userId" INTEGER,
 
     CONSTRAINT "Work_pkey" PRIMARY KEY ("id")
 );
@@ -176,21 +180,6 @@ CREATE TABLE "Studio" (
     "creatorId" INTEGER NOT NULL,
 
     CONSTRAINT "Studio_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "Exhibition" (
-    "id" SERIAL NOT NULL,
-    "description" TEXT,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-    "price" MONEY,
-    "currency" VARCHAR(3) DEFAULT E'NGN',
-    "sellAs" VARCHAR(15),
-    "creatorId" INTEGER NOT NULL,
-    "workId" INTEGER NOT NULL,
-
-    CONSTRAINT "Exhibition_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -222,41 +211,18 @@ CREATE TABLE "Contact" (
 );
 
 -- CreateTable
-CREATE TABLE "Badge" (
-    "id" SERIAL NOT NULL,
-    "type" VARCHAR(20) DEFAULT E'general',
-    "name" VARCHAR(50) NOT NULL,
-    "description" VARCHAR(500) DEFAULT E'for all users',
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "Badge_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "Token" (
     "id" SERIAL NOT NULL,
-    "token" TEXT NOT NULL,
+    "token" VARCHAR(500) NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "userId" INTEGER,
+    "expired" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "Token_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "_SkillToUser" (
-    "A" INTEGER NOT NULL,
-    "B" INTEGER NOT NULL
-);
-
--- CreateTable
-CREATE TABLE "_BadgeToUser" (
-    "A" INTEGER NOT NULL,
-    "B" INTEGER NOT NULL
-);
-
--- CreateTable
-CREATE TABLE "_ExhibitionToUser" (
     "A" INTEGER NOT NULL,
     "B" INTEGER NOT NULL
 );
@@ -316,9 +282,6 @@ CREATE UNIQUE INDEX "Studio_creatorId_key" ON "Studio"("creatorId");
 CREATE UNIQUE INDEX "Contact_phone_key" ON "Contact"("phone");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Badge_name_key" ON "Badge"("name");
-
--- CreateIndex
 CREATE UNIQUE INDEX "Token_token_key" ON "Token"("token");
 
 -- CreateIndex
@@ -326,18 +289,6 @@ CREATE UNIQUE INDEX "_SkillToUser_AB_unique" ON "_SkillToUser"("A", "B");
 
 -- CreateIndex
 CREATE INDEX "_SkillToUser_B_index" ON "_SkillToUser"("B");
-
--- CreateIndex
-CREATE UNIQUE INDEX "_BadgeToUser_AB_unique" ON "_BadgeToUser"("A", "B");
-
--- CreateIndex
-CREATE INDEX "_BadgeToUser_B_index" ON "_BadgeToUser"("B");
-
--- CreateIndex
-CREATE UNIQUE INDEX "_ExhibitionToUser_AB_unique" ON "_ExhibitionToUser"("A", "B");
-
--- CreateIndex
-CREATE INDEX "_ExhibitionToUser_B_index" ON "_ExhibitionToUser"("B");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_Recieved_AB_unique" ON "_Recieved"("A", "B");
@@ -439,16 +390,13 @@ ALTER TABLE "Work" ADD CONSTRAINT "Work_creatorId_fkey" FOREIGN KEY ("creatorId"
 ALTER TABLE "Work" ADD CONSTRAINT "Work_studioId_fkey" FOREIGN KEY ("studioId") REFERENCES "Studio"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "Work" ADD CONSTRAINT "Work_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "Order" ADD CONSTRAINT "Order_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Studio" ADD CONSTRAINT "Studio_creatorId_fkey" FOREIGN KEY ("creatorId") REFERENCES "Creator"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Exhibition" ADD CONSTRAINT "Exhibition_creatorId_fkey" FOREIGN KEY ("creatorId") REFERENCES "Creator"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Exhibition" ADD CONSTRAINT "Exhibition_workId_fkey" FOREIGN KEY ("workId") REFERENCES "Work"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Job" ADD CONSTRAINT "Job_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -467,18 +415,6 @@ ALTER TABLE "_SkillToUser" ADD FOREIGN KEY ("A") REFERENCES "Skill"("id") ON DEL
 
 -- AddForeignKey
 ALTER TABLE "_SkillToUser" ADD FOREIGN KEY ("B") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "_BadgeToUser" ADD FOREIGN KEY ("A") REFERENCES "Badge"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "_BadgeToUser" ADD FOREIGN KEY ("B") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "_ExhibitionToUser" ADD FOREIGN KEY ("A") REFERENCES "Exhibition"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "_ExhibitionToUser" ADD FOREIGN KEY ("B") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_Recieved" ADD FOREIGN KEY ("A") REFERENCES "Message"("id") ON DELETE CASCADE ON UPDATE CASCADE;

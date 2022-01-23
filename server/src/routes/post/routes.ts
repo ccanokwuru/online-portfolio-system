@@ -10,7 +10,7 @@ const postsRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
   fastify.post<{ Body: IPost }>("/create", {
     preHandler: fastify.auth([
       // @ts-ignore
-      fastify.authenticate, fastify.current_userId, fastify.upload_single
+      fastify.authenticate, fastify.current_userId,
     ], { run: 'all' })
   }, async function (request, reply) {
     const { title, content } = request.body
@@ -70,7 +70,7 @@ const postsRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
   fastify.post<{ Body: IPost, Params: IOneId }>("/p/:id/update", {
     preHandler: fastify.auth([
       // @ts-ignore
-      fastify.authenticate, fastify.current_userId, fastify.upload_single
+      fastify.authenticate, fastify.current_userId
     ])
   }, async function (request, reply) {
     const { title, content } = request.body

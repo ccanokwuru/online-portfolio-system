@@ -52,4 +52,5 @@
     width: 50px;
     height: auto;
 }
+
 </style>

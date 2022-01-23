@@ -19,14 +19,14 @@ import CardDefault from '../components/CardDefault.vue'
                         class="btn bg-opacity-10 bg-slate-900 my-5 absolute bottom-9 font-semibold text-white text-4xl p-3"
                     >Lets Start The Journey</a>
                 </div>
-                <div>
+                <div class="text-center">
                     <img src="../assets/head.png" alt="creative image" />
                 </div>
             </div>
         </section>
         <section class="container my-7 relative">
             <h2 class="text-2xl font-bold my-3 px-2">Exhibitions & Auctions</h2>
-            <div class="flex flex-wrap justify-between">
+            <div class="flex flex-wrap justify-center content-center">
                 <CardDefault
                     header="Ancokwuru Chisom"
                     description="Consectetur minim nostrud in eu."
@@ -35,19 +35,18 @@ import CardDefault from '../components/CardDefault.vue'
                     :key="index"
                 />
             </div>
-            <a
-                href="#"
-                class="font-semibold absolute bottom-4 right-2 hover:underline-offset-1 hover:underline"
-            >
-                see more
-                <span class="text-red-900">
-                    <i class="bi bi-chevron-right"></i>
-                </span>
-            </a>
+            <p class="text-right">
+                <a href="#" class="font-semibold hover:underline-offset-1 hover:underline">
+                    see more
+                    <span class="text-red-900">
+                        <i class="bi bi-chevron-right"></i>
+                    </span>
+                </a>
+            </p>
         </section>
         <section class="container my-7 relative">
             <h2 class="text-2xl font-bold my-3 px-2">Talents Onboard</h2>
-            <div class="flex flex-wrap justify-between">
+            <div class="flex flex-wrap justify-center content-center">
                 <CardDefault
                     header="Ancokwuru Chisom"
                     description="Consectetur minim nostrud in eu."
@@ -56,15 +55,15 @@ import CardDefault from '../components/CardDefault.vue'
                     :key="index"
                 />
             </div>
-            <a
-                href="#"
-                class="font-semibold absolute bottom-4 right-2 hover:underline-offset-1 hover:underline"
-            >
-                see more
-                <span class="text-red-900">
-                    <i class="bi bi-chevron-right"></i>
-                </span>
-            </a>
+
+            <p class="text-right">
+                <a href="#" class="font-semibold hover:underline-offset-1 hover:underline">
+                    see more
+                    <span class="text-red-900">
+                        <i class="bi bi-chevron-right"></i>
+                    </span>
+                </a>
+            </p>
         </section>
     </main>
 </template>
