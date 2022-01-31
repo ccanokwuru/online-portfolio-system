@@ -52,7 +52,7 @@ export interface IRoleBody {
 // works related
 export interface IWork {
   title: string
-  categoryId: number
+  categoryId?: number
   description?: string
   studioId?: number
   creatorId: number
@@ -164,5 +164,5 @@ export interface IFile {
 }
 
 export interface IFiles {
-  files: object[]
+  files: object[] | string[] | object | string
 }

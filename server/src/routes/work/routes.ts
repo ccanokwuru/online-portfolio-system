@@ -12,7 +12,7 @@ const worksRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
       fastify.authenticate, fastify.creator_auth, fastify.current_userId
     ], { run: 'all' })
   }, async function (request, reply) {
-    const { title, categoryId, description, studioId, files } = request.body
+    const { title, categoryId, description, studioId } = request.body
 
     if (!title && !categoryId && !description && !studioId)
       return reply.code(501).send({ message: "Something went wrong" })
@@ -109,7 +109,7 @@ const worksRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
     const { title, categoryId, description, studioId, creatorId } = request.body
     const { id } = request.params
 
-    const images = JSON.stringify({})
+    const files = JSON.stringify({})
 
     const work = await prisma.work.update({
       where: {
@@ -118,7 +118,7 @@ const worksRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
       data: {
         description,
         title,
-        images,
+        files,
         studio: {
           connect: {
             id: studioId

@@ -4,9 +4,22 @@ import MainLayout from '../layouts/MainLayout.vue'
 import StudioLayout from '../layouts/StudioLayout.vue'
 import GalleryLayout from '../layouts/GalleryLayout.vue'
 
-// Pages
+// Main Pages 
 import NotFound from '../pages/NotFound.vue';
 import Index from '../pages/Index.vue';
+import Artists from '../pages/Artists.vue';
+
+// Studio Pages 
+import Home from '../pages/studio/Home.vue';
+import About from '../pages/Artists.vue';
+import Projects from '../pages/Artists.vue';
+import Contact from '../pages/Artists.vue';
+
+// Gallery Pages 
+import Root from '../pages/gallery/Root.vue';
+import List from '../pages/Artists.vue';
+import Cart from '../pages/Artists.vue';
+import Search from '../pages/Artists.vue';
 
 const main: RouteRecordRaw = {
     path: '/',
@@ -14,7 +27,7 @@ const main: RouteRecordRaw = {
     component: MainLayout,
     children: [
         { path: "", name: "home", component: Index },
-        { path: "artists", name: "artists", component: Index },
+        { path: "artists", name: "artists", component: Artists },
         { path: "news", name: "news", component: Index },
     ],
 }
@@ -24,10 +37,10 @@ const studio: RouteRecordRaw = {
     // exact,
     component: StudioLayout,
     children: [
-        { path: "", name: "studio home", component: Index },
-        { path: "about", name: "studio about", component: Index },
-        { path: "projects", name: "studio projects", component: Index },
-        { path: "hire-me", name: "studio hire me", component: Index },
+        { path: "", name: "studio home", component: Home },
+        { path: "about", name: "studio about", component: About },
+        { path: "projects", name: "studio projects", component: Projects },
+        { path: "contact", name: "studio hire me", component: Contact },
     ],
 }
 
@@ -36,11 +49,12 @@ const gallery: RouteRecordRaw = {
     // exact,
     component: GalleryLayout,
     children: [
-        { path: "", name: "exhibition", component: Index },
-        { path: "paintings", name: "exhibition paintings", component: Index },
-        { path: "sculpture", name: "exhibition sculpture", component: Index },
-        { path: "drawings", name: "exhibition drawings", component: Index },
-        { path: "cart", name: "exhibition cart", component: Index },
+        { path: "", name: "exhibition", component: Root },
+        { path: "paintings", name: "exhibition paintings", component: List },
+        { path: "sculpture", name: "exhibition sculpture", component: List },
+        { path: "drawings", name: "exhibition drawings", component: List },
+        { path: "search", name: "exhibition search", component: Search },
+        { path: "cart", name: "exhibition cart", component: Cart },
     ],
 }
 

@@ -10,24 +10,40 @@ const categoriesRoute: FastifyPluginAsync = async (fastify, opts): Promise<void>
       fastify.authenticate, fastify.admin_auth
     ], { run: 'all' })
   }, async function (request, reply) {
+    console.log(request.body)
     const { name, p_categoryId, description } = request.body
 
-    const category = await prisma.category.create({
+    const categoryCreate = await prisma.category.create({
       data: {
         description,
         name,
-        p_category: {
-          connect: {
-            id: Number(p_categoryId)
-          }
-        }
       },
       include: {
         p_category: true
       }
     });
+    if (p_categoryId && categoryCreate) {
+      const category = await prisma.category.update({
+        where: {
+          id: Number(categoryCreate.id)
+        },
+        data: {
+          p_category: {
+            connect: {
+              id: Number(p_categoryId)
+            }
+          }
+        },
+        include: {
+          p_category: true
+        }
+      });
+      return {
+        category
+      };
+    }
     return {
-      category
+      categoryCreate
     };
   });
 

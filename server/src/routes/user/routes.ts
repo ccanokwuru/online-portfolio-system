@@ -77,6 +77,7 @@ const userRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
     };
 
     const authToken = fastify.jwt.sign(userInfo)
+    // console.log(fastify.jwt.verify(authToken))
 
     const token = await prisma.token.create({
       data: {
@@ -350,11 +351,11 @@ const userRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
     });
   });
 
-  fastify.post<{ Params: IOneId, Body: IRoleBody }>("/u/:id/make_creator",
+  fastify.post<{ Params: IOneId, Body: IRoleBody }>("/u/:id/make-creator",
     {
       preHandler: fastify.auth([
         // @ts-ignore
-        fastify.authenticate,
+        fastify.authenticate, fastify.admin_auth
       ], { run: 'all' })
     },
     async function (request, reply) {
@@ -390,7 +391,7 @@ const userRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
         creator
       })
     });
-  fastify.post<{ Params: IOneId, Body: IRoleBody }>("/u/:id/make_admin",
+  fastify.post<{ Params: IOneId, Body: IRoleBody }>("/u/:id/make-admin",
     {
       preHandler: fastify.auth([
         // @ts-ignore
@@ -439,7 +440,7 @@ const userRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
       })
     });
 
-  fastify.post<{ Params: IOneId, Body: IRoleBody }>("/u/:id/remoke_creator",
+  fastify.post<{ Params: IOneId, Body: IRoleBody }>("/u/:id/remoke-creator",
     {
       preHandler: fastify.auth([
         // @ts-ignore
@@ -472,7 +473,7 @@ const userRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
       })
     });
 
-  fastify.post<{ Params: IOneId, Body: IRoleBody }>("/u/:id/remoke_admin",
+  fastify.post<{ Params: IOneId, Body: IRoleBody }>("/u/:id/remoke-admin",
     {
       preHandler: fastify.auth([
         // @ts-ignore

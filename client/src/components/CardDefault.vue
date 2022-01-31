@@ -6,37 +6,36 @@ defineProps<{
   imageUrl: string,
   description: string,
   href: string
+  roundedImage: boolean,
+  openInBlank: boolean,
+  rounded: boolean,
 }>()
 
 </script>
 
 <template>
-  <div class="my-6 px-6 sm:px-6 lg:px-4 w-full md:w-6/12 lg:w-4/12 gap-7 flex-grow">
-    <div>
-      <slot name="image" v-if="imageUrl">
-        <a :href="href ? href : '#'" :target="href ? '_blank' : '_self'">
-          <!-- Image -->
-          <img
-            class="rounded-2xl drop-shadow-md hover:drop-shadow-xl transition-all duration-200 delay-100"
-            :src="imageUrl"
-            :alt="header"
-          />
-        </a>
-      </slot>
-      <a :href="href ? href : '#'">
-        <!-- Details -->
-        <div class="text-justify my-3">
-          <!-- Name -->
-          <slot name="header" v-if="header">
-            <h6 class="text-gray-900 text-lg font-bold mb-1">{{ header }}</h6>
-          </slot>
+  <div :class="rounded ? 'md:rounded-2xl rounded-md' : ''" class="card">
+    <slot name="image" v-if="imageUrl">
+      <router-link :to="href ? href : '#'" :target="openInBlank ? '-blank' : '_self'">
+        <!-- Image -->
+        <img :class="roundedImage ? 'md:rounded-2xl rounded-md' : ''" :src="imageUrl" :alt="header" />
+      </router-link>
+    </slot>
+    <router-link :to="href ? href : '#'" :target="openInBlank ? '-blank' : '_self'">
+      <!-- Details -->
+      <div class="md:my-2 md:px-3 md:pb-2 p-1 whitespace-pre-wrap">
+        <!-- Name -->
+        <slot name="header" v-if="header">
+          <h6
+            class="text-base md:text-lg md:font-bold font-semibold md:mb-1 leading-tight md:leading-normal"
+          >{{ header }}</h6>
+        </slot>
 
-          <!-- Description -->
-          <slot name="description" v-if="description">
-            <div class="text-gray-700 font-light mb-2">{{ description }}</div>
-          </slot>
-        </div>
-      </a>
-    </div>
+        <!-- Description -->
+        <slot name="description" v-if="description">
+          <div class="text-gray-700 font-light md:mb-2 mb-1 text-sm md:text-base">{{ description }}</div>
+        </slot>
+      </div>
+    </router-link>
   </div>
 </template>

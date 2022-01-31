@@ -28,7 +28,6 @@
     "fastify-plugin": "^3.0.0",
     "fastify-sensible": "^3.1.0",
     "flutterwave-node-v3": "^1.0.9",
-    "formidable": "^2.0.1",
     "github-slugger": "^1.4.0"
   },
   "devDependencies": {

@@ -10,7 +10,7 @@ const postsRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
   fastify.post<{ Body: IPost }>("/create", {
     preHandler: fastify.auth([
       // @ts-ignore
-      fastify.authenticate, fastify.current_userId,
+      fastify.authenticate
     ], { run: 'all' })
   }, async function (request, reply) {
     const { title, content } = request.body

@@ -1,7 +1,7 @@
 <template>
-  <q-layout view="lHh lpR lff">
-    <q-header class="bg-white text-dark q-py-sm" height-hint="98">
-      <q-toolbar align="right" style="width: 95%;">
+  <q-layout view="lHh LpR lff" class="text-grey-9">
+    <q-header class="bg-white text-grey-9 q-py-sm" height-hint="98">
+      <q-toolbar align="right" class="q-mr-4 gt-sm">
         <q-space />
         <Avatar class="q-pr-sm" />
 
@@ -13,7 +13,7 @@
             round
             flat
             dense
-            size=".5em"
+            size=".6rem"
           />
           <q-menu transition-show="scale" transition-hide="scale">
             <q-list style="min-width: 100px">
@@ -42,7 +42,7 @@
             dense
             @click="onClick"
             class="text-sm"
-            size=".5em"
+            size=".6rem"
           />
           <q-btn
             color="grey"
@@ -53,13 +53,31 @@
             icon="bi-eye"
             @click="onClick"
             class="text-sm"
-            size=".5em"
+            size=".6rem"
           />
+        </div>
+      </q-toolbar>
+      <q-toolbar class="lt-md text-grey-9">
+        <q-btn flat round dense icon="bi-arrow-left" />
+        <q-toolbar-title>Dashboard</q-toolbar-title>
+        <div>
+          <q-btn flat round dense icon="bi-three-dots-vertical" />
+          <q-menu>
+            <q-list style="min-width: 100px">
+              <q-item clickable v-close-popup>
+                <q-item-section>New tab</q-item-section>
+              </q-item>
+              <q-separator />
+              <q-item clickable v-close-popup>
+                <q-item-section>New incognito tab</q-item-section>
+              </q-item>
+            </q-list>
+          </q-menu>
         </div>
       </q-toolbar>
     </q-header>
 
-    <q-drawer side="left" class="bg-grey-8 text-white" v-model="leftDrawerOpen" :width="75">
+    <q-drawer side="left" class="bg-grey-8 text-white gt-sm" show-if-above :width="75">
       <div class="flex flex-center q-py-sm">
         <q-btn to="/" exact flat class="q-pa-none">
           <q-img class="mini-logo-img" src="~assets/logo.png" />
