@@ -131,9 +131,10 @@ model Review {
 
 model Message {
   id          Int       @id @default(autoincrement())
-  to          User[]    @relation("Recieved")
+  to          User      @relation("Recieved", fields: [toId], references: [id])
   from        User      @relation("Sent", fields: [fromId], references: [id])
   fromId      Int
+  toId        Int
   message     String
   replies     Message[] @relation("ReplyToMessage")
   p_message   Message?  @relation("ReplyToMessage", fields: [p_messageId], references: [id])

@@ -24,7 +24,10 @@ const studiosRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> =>
         },
       },
       include: {
-        creator: true
+        creator: true,
+        works: true,
+        reactions: true,
+        favourites: true,
       }
     });
     return {
@@ -38,6 +41,8 @@ const studiosRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> =>
       include: {
         creator: true,
         works: true,
+        reactions: true,
+        favourites: true,
       }
     })
 
@@ -55,6 +60,8 @@ const studiosRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> =>
       include: {
         creator: true,
         works: true,
+        reactions: true,
+        favourites: true,
       }
     })
 
@@ -83,6 +90,8 @@ const studiosRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> =>
       include: {
         creator: true,
         works: true,
+        reactions: true,
+        favourites: true,
       }
     });
     return {
@@ -117,7 +126,9 @@ const studiosRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> =>
       },
       include: {
         creator: true,
-        works: true
+        works: true,
+        reactions: true,
+        favourites: true,
       }
     });
     return {
@@ -151,7 +162,9 @@ const studiosRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> =>
       },
       include: {
         creator: true,
-        reactions: true
+        works: true,
+        reactions: true,
+        favourites: true,
       }
     });
     return {
@@ -180,14 +193,14 @@ const studiosRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> =>
       if (studio?.creator.id !== id)
         return reply.code(401).send({ msg: " you are not authorised for this" })
 
-      const w = await prisma.studio.delete({
+      const s = await prisma.studio.delete({
         where: {
           id: Number(id)
         },
       });
 
       return {
-        w
+        s
       };
     });
 };

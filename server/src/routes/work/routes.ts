@@ -62,7 +62,11 @@ const worksRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
         }
       },
       include: {
-        creator: true
+        creator: true,
+        reactions: true,
+        reviews: true,
+        favourites: true,
+        category: true
       }
     });
 
@@ -75,7 +79,11 @@ const worksRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 
     const works = await prisma.work.findMany({
       include: {
-        creator: true
+        creator: true,
+        reactions: true,
+        reviews: true,
+        favourites: true,
+        category: true
       }
     })
 
@@ -91,7 +99,11 @@ const worksRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
         id,
       },
       include: {
-        creator: true
+        creator: true,
+        reactions: true,
+        reviews: true,
+        favourites: true,
+        category: true
       }
     })
 
@@ -136,7 +148,11 @@ const worksRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
         },
       },
       include: {
-        creator: true
+        creator: true,
+        reactions: true,
+        reviews: true,
+        favourites: true,
+        category: true
       }
     });
     return {
@@ -171,7 +187,10 @@ const worksRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
       },
       include: {
         creator: true,
-        reactions: true
+        reactions: true,
+        reviews: true,
+        favourites: true,
+        category: true
       }
     });
     return {
@@ -205,7 +224,10 @@ const worksRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
       },
       include: {
         creator: true,
-        reactions: true
+        reactions: true,
+        reviews: true,
+        favourites: true,
+        category: true
       }
     });
     return {
@@ -241,7 +263,10 @@ const worksRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
       },
       include: {
         creator: true,
-        reactions: true
+        reactions: true,
+        reviews: true,
+        favourites: true,
+        category: true
       }
     });
     return {
@@ -263,7 +288,11 @@ const worksRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
           id
         },
         include: {
-          creator: true
+          creator: true,
+          reactions: true,
+          reviews: true,
+          favourites: true,
+          category: true
         }
       })
 

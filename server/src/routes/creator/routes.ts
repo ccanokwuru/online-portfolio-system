@@ -21,7 +21,12 @@ const categoriesRoute: FastifyPluginAsync = async (fastify, opts): Promise<void>
         }
       },
       include: {
-        user: true
+        user: true,
+        works: true,
+        studio: true,
+        skills: true,
+        favourites: true,
+        reactions: true,
       }
     });
     return {
@@ -33,7 +38,12 @@ const categoriesRoute: FastifyPluginAsync = async (fastify, opts): Promise<void>
 
     const categories = await prisma.creator.findMany({
       include: {
-        user: true
+        user: true,
+        works: true,
+        studio: true,
+        skills: true,
+        favourites: true,
+        reactions: true,
       }
     })
 
@@ -49,7 +59,12 @@ const categoriesRoute: FastifyPluginAsync = async (fastify, opts): Promise<void>
         id,
       },
       include: {
-        user: true
+        user: true,
+        works: true,
+        studio: true,
+        skills: true,
+        favourites: true,
+        reactions: true,
       }
     })
 
@@ -83,9 +98,14 @@ const categoriesRoute: FastifyPluginAsync = async (fastify, opts): Promise<void>
           }
 
         }
-
-      }, include: {
+      },
+      include: {
         user: true,
+        works: true,
+        studio: true,
+        skills: true,
+        favourites: true,
+        reactions: true,
       }
     });
     return {
@@ -112,9 +132,14 @@ const categoriesRoute: FastifyPluginAsync = async (fastify, opts): Promise<void>
             id: Number(jobId)
           }
         }
-      }, include: {
+      },
+      include: {
         user: true,
-        jobs: true
+        works: true,
+        studio: true,
+        skills: true,
+        favourites: true,
+        reactions: true,
       }
     });
     return {

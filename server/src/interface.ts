@@ -166,3 +166,11 @@ export interface IFile {
 export interface IFiles {
   files: object[] | string[] | object | string
 }
+
+export interface IMessage {
+  id?: number
+  fromId: number
+  toId: number
+  message: string
+  p_messageId?: number
+}

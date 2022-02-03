@@ -62,8 +62,6 @@ module.exports = fp(async function (fastify, opts) {
 
   fastify.decorate("admin_auth", async (request: FastifyRequest, reply: FastifyReply, done: HookHandlerDoneFunction) => {
 
-    console.log(request.user)
-
     // @ts-ignore
     if (request.user?.role !== "admin") return reply.code(401).send({ message: "admins only; you are not authorised for this" })
 
@@ -113,7 +111,7 @@ module.exports = fp(async function (fastify, opts) {
 
   fastify.decorate("current_userId_admin", async (request: FastifyRequest, reply: FastifyReply, done: HookHandlerDoneFunction) => {
     // @ts-ignore
-    const { userId, ownerId, creatorId, authorId } = request.body
+    const { userId, ownerId, creatorId, authorId, fromId, toId } = request.body
 
     console.log(request.user)
 
@@ -129,13 +127,13 @@ module.exports = fp(async function (fastify, opts) {
       user?.id !== ownerId &&
       user?.id !== creatorId &&
       user?.id !== authorId &&
+      user?.id !== fromId &&
+      user?.id !== toId &&
       // @ts-ignore
       !request.user && !request.user.role && request.user.role !== "admin" &&
       // @ts-ignore
       user?.id !== request.user.id
     ) return reply.code(401).send({ message: "specific roles; you are not authorised for this" })
-
-    console.log(request.user)
 
     return done
   })

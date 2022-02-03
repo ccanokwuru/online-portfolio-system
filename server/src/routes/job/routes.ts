@@ -29,7 +29,9 @@ const jobsRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
         }
       },
       include: {
-        owner: true
+        owner: true,
+        applicants: true,
+        category: true,
       }
     });
     return {
@@ -41,7 +43,9 @@ const jobsRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 
     const jobs = await prisma.job.findMany({
       include: {
-        owner: true
+        owner: true,
+        applicants: true,
+        category: true,
       }
     })
 
@@ -57,7 +61,9 @@ const jobsRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
         id: Number(id),
       },
       include: {
-        owner: true
+        owner: true,
+        applicants: true,
+        category: true,
       }
     })
 
@@ -89,7 +95,9 @@ const jobsRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
         },
       },
       include: {
-        owner: true
+        owner: true,
+        applicants: true,
+        category: true,
       }
     });
     return {

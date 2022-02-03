@@ -42,7 +42,10 @@ const postsRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 
     const posts = await prisma.post.findMany({
       include: {
-        author: true
+        author: true,
+        reactions: true,
+        favourites: true,
+        comments: true
       }
     })
 
@@ -58,7 +61,10 @@ const postsRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
         id,
       },
       include: {
-        author: true
+        author: true,
+        reactions: true,
+        favourites: true,
+        comments: true
       }
     })
 
@@ -87,7 +93,10 @@ const postsRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
         mainImage: `http://localhost:5000/assets/${request.uploadPath.replace("../../uploads/", "")}`,
       },
       include: {
-        author: true
+        author: true,
+        reactions: true,
+        favourites: true,
+        comments: true
       }
     });
     return {
@@ -122,7 +131,9 @@ const postsRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
       },
       include: {
         author: true,
-        reactions: true
+        reactions: true,
+        favourites: true,
+        comments: true
       }
     });
     return {
@@ -156,7 +167,9 @@ const postsRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
       },
       include: {
         author: true,
-        reactions: true
+        reactions: true,
+        favourites: true,
+        comments: true
       }
     });
     return {
