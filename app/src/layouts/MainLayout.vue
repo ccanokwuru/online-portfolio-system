@@ -184,7 +184,7 @@ const toggleDrawer = () => {
 }
 
 onMounted(() => {
-  if ($q.screen.lt.md) width.value = 75
+  if ($q.screen.gt.sm) width.value = 75
 })
 
 const resizeDrawer = () => {
