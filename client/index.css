@@ -21,7 +21,7 @@
   }
 
   .card {
-    @apply hover:drop-shadow-lg transition-all duration-200 delay-100;
+    @apply transition-all duration-200 delay-100 hover:underline;
   }
 
   .header-text {

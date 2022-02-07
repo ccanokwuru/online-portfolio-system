@@ -18,12 +18,17 @@ defineProps<{
     <slot name="image" v-if="imageUrl">
       <router-link :to="href ? href : '#'" :target="openInBlank ? '-blank' : '_self'">
         <!-- Image -->
-        <img :class="roundedImage ? 'md:rounded-2xl rounded-md' : ''" :src="imageUrl" :alt="header" />
+        <img
+          :class="roundedImage ? 'md:rounded-2xl rounded-md' : ''"
+          :src="imageUrl"
+          :alt="header"
+          class="hover:shadow-lg"
+        />
       </router-link>
     </slot>
     <router-link :to="href ? href : '#'" :target="openInBlank ? '-blank' : '_self'">
       <!-- Details -->
-      <div class="md:my-2 md:px-3 md:pb-2 p-1 whitespace-pre-wrap">
+      <div class="md:my-2 md:pb-2 whitespace-pre-wrap">
         <!-- Name -->
         <slot name="header" v-if="header">
           <h6
