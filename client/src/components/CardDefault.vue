@@ -14,7 +14,7 @@ defineProps<{
 </script>
 
 <template>
-  <div :class="rounded ? 'md:rounded-2xl rounded-md' : ''" class="card">
+  <div :class="rounded ? 'md:rounded-2xl rounded-md hover:first:first:shadow-lg' : ''" class="card">
     <slot name="image" v-if="imageUrl">
       <router-link :to="href ? href : '#'" :target="openInBlank ? '-blank' : '_self'">
         <!-- Image -->
@@ -44,3 +44,6 @@ defineProps<{
     </router-link>
   </div>
 </template>
+
+<style scoped>
+</style>
