@@ -188,9 +188,9 @@ onMounted(() => {
 })
 
 const resizeDrawer = () => {
-  if (width.value === 250)
-    width.value = 75
-  else width.value = 250
+  if($q.screen.ld.md) 
+    width.value = 250
+  else width.value === 250 ?    width.value = 75: width.value = 250
 
   drawerExpand.value = !drawerExpand.value
 }
