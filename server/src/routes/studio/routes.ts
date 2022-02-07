@@ -43,6 +43,9 @@ const studiosRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> =>
         works: true,
         reactions: true,
         favourites: true,
+      },
+      orderBy: {
+        updatedAt: "desc"
       }
     })
 

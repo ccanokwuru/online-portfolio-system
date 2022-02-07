@@ -84,6 +84,9 @@ const worksRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
         reviews: true,
         favourites: true,
         category: true
+      },
+      orderBy: {
+        updatedAt: "desc"
       }
     })
 

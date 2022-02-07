@@ -36,6 +36,9 @@ const categoriesRoute: FastifyPluginAsync = async (fastify, opts): Promise<void>
     const categories = await prisma.skill.findMany({
       include: {
         category: true
+      },
+      orderBy: {
+        updatedAt: "desc"
       }
     })
 

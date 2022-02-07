@@ -8,9 +8,13 @@
       <div class="col-3">Art !</div>
       <div class="col-2">3,245</div>
       <div class="col-2">4.23</div>
-      <div class="col-3 flex flex-between flex-center">
+      <div class="col-1">
         <q-icon name="bi-folder-symlink" />
-        <q-icon name="bi-share" class="q-px-lg" />
+      </div>
+      <div class="col-1 text-center">
+        <q-icon name="bi-share" />
+      </div>
+      <div class="col-1 text-right q-pr-sm">
         <q-icon name="bi-three-dots" />
       </div>
     </div>

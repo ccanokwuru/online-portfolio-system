@@ -46,6 +46,9 @@ const jobsRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
         owner: true,
         applicants: true,
         category: true,
+      },
+      orderBy: {
+        updatedAt: "desc"
       }
     })
 

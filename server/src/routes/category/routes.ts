@@ -50,10 +50,18 @@ const categoriesRoute: FastifyPluginAsync = async (fastify, opts): Promise<void>
   fastify.get("/all", async function (request, reply) {
 
     const categories = await prisma.category.findMany({
+      where: {
+        p_categoryId: {
+          equals: null
+        }
+      },
       include: {
         works: true,
         skills: true,
         jobs: true
+      },
+      orderBy: {
+        updatedAt: "desc"
       }
     })
 
@@ -62,14 +70,24 @@ const categoriesRoute: FastifyPluginAsync = async (fastify, opts): Promise<void>
     };
   });
 
-  fastify.get<{ Params: IOneId }>("/w/:id", async function (request, reply) {
+  fastify.get<{ Params: IOneId }>("/cat/:id", async function (request, reply) {
     const { id } = request.params
     const category = await prisma.category.findUnique({
       where: {
-        id,
+        OR:[
+          {id: Number(id)},
+          {
+            p_categoryId: {
+              equals: null
+            }
+          }
+        ]
       },
       include: {
-        works: true
+        works: true,
+        skills:true,
+        jobs:true,
+        catergories:true,
       }
     })
 
@@ -78,7 +96,7 @@ const categoriesRoute: FastifyPluginAsync = async (fastify, opts): Promise<void>
     };
   });
 
-  fastify.post<{ Body: ICategory, Params: IOneId }>("/w/:id/update", {
+  fastify.post<{ Body: ICategory, Params: IOneId }>("/cat/:id/update", {
     preHandler: fastify.auth([
       // @ts-ignore
       fastify.authenticate, fastify.current_userId
@@ -100,6 +118,8 @@ const categoriesRoute: FastifyPluginAsync = async (fastify, opts): Promise<void>
           }
         }
       }, include: {
+        p_category:true,
+        categories:true,
         works: true,
         skills: true,
         jobs: true

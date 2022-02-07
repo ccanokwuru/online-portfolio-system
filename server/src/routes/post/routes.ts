@@ -46,6 +46,9 @@ const postsRoute: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
         reactions: true,
         favourites: true,
         comments: true
+      },
+      orderBy: {
+        updatedAt: "desc"
       }
     })
 

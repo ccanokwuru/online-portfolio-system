@@ -44,6 +44,9 @@ const categoriesRoute: FastifyPluginAsync = async (fastify, opts): Promise<void>
         skills: true,
         favourites: true,
         reactions: true,
+      },
+      orderBy: {
+        updatedAt: "desc"
       }
     })
 
