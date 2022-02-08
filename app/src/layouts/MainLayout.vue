@@ -171,28 +171,23 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import Avatar from 'src/components/Avatar.vue';
 import { useQuasar } from 'quasar';
 const drawerOpen = ref(false);
 const drawerExpand = ref(true);
-const width = ref(250);
+const width = $q.screen.gt.sm ? ref(75) : 250;
 const $q = useQuasar();
 const toggleDrawer = () => {
   drawerOpen.value = !drawerOpen.value
   drawerExpand.value = true
 }
 
-onMounted(() => {
-  if ($q.screen.gt.sm) width.value = 75
-})
-
 const resizeDrawer = () => {
-  if ($q.screen.lt.md)
-    width.value = 250
-  else width.value === 250 ? width.value = 75 : width.value = 250
-
-  drawerExpand.value = !drawerExpand.value
+  if ($q.screen.gt.md) {
+    width.value === 250 ? width.value = 75 : width.value = 250
+    drawerExpand.value = !drawerExpand.value
+  }
 }
 
 export default {
