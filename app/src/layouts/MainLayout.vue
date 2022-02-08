@@ -90,7 +90,8 @@
         </q-btn>
       </div>
       <q-btn
-        class="gt-sm shrink-btn"
+        v-if="$q.screen.gt.sm"
+        class="shrink-btn"
         color="grey-8"
         text-color="white"
         dense
@@ -161,7 +162,7 @@
     </q-page-container>
 
     <q-footer elevated class="bg-grey-8 text-white" v-if="$q.screen.lt.md">
-      <q-tabs dense class="text-grey-1" stretch switch-indicator indicator-color="white">
+      <q-tabs class="text-grey-1" stretch switch-indicator indicator-color="white">
         <q-route-tab to="/" exact icon="bi-house" dense />
         <q-route-tab to="/work/add" exact icon="bi-plus-square" dense />
         <q-tab icon="bi-list" dense @click="toggleDrawer" />
