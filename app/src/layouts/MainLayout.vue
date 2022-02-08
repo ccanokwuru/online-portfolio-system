@@ -90,8 +90,7 @@
         </q-btn>
       </div>
       <q-btn
-        v-if="$q.screen.gt.sm"
-        class="shrink-btn"
+        class="gt-sm shrink-btn"
         color="grey-8"
         text-color="white"
         dense
@@ -108,49 +107,49 @@
             <q-tooltip>Dashboard</q-tooltip>
             <q-icon color="white" name="bi-house" />
           </q-item-section>
-          <q-item-section v-if="drawerExpand">Dashboard</q-item-section>
+          <q-item-section v-model="drawerExpand">Dashboard</q-item-section>
         </q-item>
         <q-item clickable v-ripple to="/stats" exact>
           <q-item-section avatar>
             <q-tooltip>Statistics</q-tooltip>
             <q-icon color="white" name="bi-bar-chart" />
           </q-item-section>
-          <q-item-section v-if="drawerExpand">Statistics</q-item-section>
+          <q-item-section v-model="drawerExpand">Statistics</q-item-section>
         </q-item>
         <q-item clickable v-ripple to="/studio" exact>
           <q-item-section avatar>
             <q-tooltip>Studio</q-tooltip>
             <q-icon color="white" name="bi-file-earmark" />
           </q-item-section>
-          <q-item-section v-if="drawerExpand">Studio</q-item-section>
+          <q-item-section v-model="drawerExpand">Studio</q-item-section>
         </q-item>
         <q-item clickable v-ripple to="/chat" exact>
           <q-item-section avatar>
             <q-tooltip>Chats</q-tooltip>
             <q-icon color="white" name="bi-chat-left" />
           </q-item-section>
-          <q-item-section v-if="drawerExpand">Chats</q-item-section>
+          <q-item-section v-model="drawerExpand">Chats</q-item-section>
         </q-item>
         <q-item clickable v-ripple to="/works" exact>
           <q-item-section avatar>
             <q-tooltip>Works</q-tooltip>
             <q-icon color="white" name="bi-brush" />
           </q-item-section>
-          <q-item-section v-if="drawerExpand">Works</q-item-section>
+          <q-item-section v-model="drawerExpand">Works</q-item-section>
         </q-item>
         <q-item clickable v-ripple to="/skills" exact>
           <q-item-section avatar>
             <q-tooltip>Skills</q-tooltip>
             <q-icon color="white" name="bi-vector-pen" />
           </q-item-section>
-          <q-item-section v-if="drawerExpand">Skills</q-item-section>
+          <q-item-section v-model="drawerExpand">Skills</q-item-section>
         </q-item>
         <q-item clickable v-ripple to="/post" exact>
           <q-item-section avatar>
             <q-tooltip>Posts</q-tooltip>
             <q-icon color="white" name="bi-view-list" />
           </q-item-section>
-          <q-item-section v-if="drawerExpand">Posts</q-item-section>
+          <q-item-section v-model="drawerExpand">Posts</q-item-section>
         </q-item>
       </q-list>
     </q-drawer>
@@ -162,7 +161,7 @@
     </q-page-container>
 
     <q-footer elevated class="bg-grey-8 text-white" v-if="$q.screen.lt.md">
-      <q-tabs class="text-grey-1" stretch switch-indicator indicator-color="white">
+      <q-tabs dense class="text-grey-1" stretch switch-indicator indicator-color="white">
         <q-route-tab to="/" exact icon="bi-house" dense />
         <q-route-tab to="/work/add" exact icon="bi-plus-square" dense />
         <q-tab icon="bi-list" dense @click="toggleDrawer" />
@@ -172,7 +171,7 @@
 </template>
 
 <script>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import Avatar from 'src/components/Avatar.vue';
 import { useQuasar } from 'quasar';
 const drawerOpen = ref(false);
@@ -184,20 +183,16 @@ const toggleDrawer = () => {
   drawerExpand.value = true
 }
 
-if ($q.screen.lt.md) {
-  width.value = 250
-  drawerExpand.value = true
-}
+onMounted(() => {
+  if ($q.screen.gt.sm) width.value = 75
+})
 
 const resizeDrawer = () => {
-  if ($q.screen.gt.sm) {
-    width.value === 250 ? width.value = 75 : width.value = 250
-    drawerExpand.value = !drawerExpand.value
-  }
-  else {
+  if ($q.screen.lt.md)
     width.value = 250
-    drawerExpand.value = true
-  }
+  else width.value === 250 ? width.value = 75 : width.value = 250
+
+  drawerExpand.value = !drawerExpand.value
 }
 
 export default {
@@ -206,6 +201,8 @@ export default {
   },
   setup() {
     // if ($q.screen.gt.sm === true) width.value = 75
+
+    console.log($q)
 
     return {
       drawerOpen,
