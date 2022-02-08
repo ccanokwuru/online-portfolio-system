@@ -107,49 +107,49 @@
             <q-tooltip>Dashboard</q-tooltip>
             <q-icon color="white" name="bi-house" />
           </q-item-section>
-          <q-item-section v-model="drawerExpand">Dashboard</q-item-section>
+          <q-item-section v-if="drawerExpand">Dashboard</q-item-section>
         </q-item>
         <q-item clickable v-ripple to="/stats" exact>
           <q-item-section avatar>
             <q-tooltip>Statistics</q-tooltip>
             <q-icon color="white" name="bi-bar-chart" />
           </q-item-section>
-          <q-item-section v-model="drawerExpand">Statistics</q-item-section>
+          <q-item-section v-if="drawerExpand">Statistics</q-item-section>
         </q-item>
         <q-item clickable v-ripple to="/studio" exact>
           <q-item-section avatar>
             <q-tooltip>Studio</q-tooltip>
             <q-icon color="white" name="bi-file-earmark" />
           </q-item-section>
-          <q-item-section v-model="drawerExpand">Studio</q-item-section>
+          <q-item-section v-if="drawerExpand">Studio</q-item-section>
         </q-item>
         <q-item clickable v-ripple to="/chat" exact>
           <q-item-section avatar>
             <q-tooltip>Chats</q-tooltip>
             <q-icon color="white" name="bi-chat-left" />
           </q-item-section>
-          <q-item-section v-model="drawerExpand">Chats</q-item-section>
+          <q-item-section v-if="drawerExpand">Chats</q-item-section>
         </q-item>
         <q-item clickable v-ripple to="/works" exact>
           <q-item-section avatar>
             <q-tooltip>Works</q-tooltip>
             <q-icon color="white" name="bi-brush" />
           </q-item-section>
-          <q-item-section v-model="drawerExpand">Works</q-item-section>
+          <q-item-section v-if="drawerExpand">Works</q-item-section>
         </q-item>
         <q-item clickable v-ripple to="/skills" exact>
           <q-item-section avatar>
             <q-tooltip>Skills</q-tooltip>
             <q-icon color="white" name="bi-vector-pen" />
           </q-item-section>
-          <q-item-section v-model="drawerExpand">Skills</q-item-section>
+          <q-item-section v-if="drawerExpand">Skills</q-item-section>
         </q-item>
         <q-item clickable v-ripple to="/post" exact>
           <q-item-section avatar>
             <q-tooltip>Posts</q-tooltip>
             <q-icon color="white" name="bi-view-list" />
           </q-item-section>
-          <q-item-section v-model="drawerExpand">Posts</q-item-section>
+          <q-item-section v-if="drawerExpand">Posts</q-item-section>
         </q-item>
       </q-list>
     </q-drawer>
