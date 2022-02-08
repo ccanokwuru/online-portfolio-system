@@ -184,13 +184,17 @@ const toggleDrawer = () => {
 }
 
 onMounted(() => {
-  if ($q.screen.gt.sm) width.value = 75
+  if ($q.screen.gt.sm) {
+    width.value = 75
+    drawerExpand.value = true
+  }
 })
 
 const resizeDrawer = () => {
-  if($q.screen.ld.md) 
+  if ($q.screen.gt.sm)
+    width.value === 250 ? width.value = 75 : width.value = 250
+  else
     width.value = 250
-  else width.value === 250 ?    width.value = 75: width.value = 250
 
   drawerExpand.value = !drawerExpand.value
 }
