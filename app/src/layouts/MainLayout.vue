@@ -174,10 +174,10 @@
 import { ref } from 'vue';
 import Avatar from 'src/components/Avatar.vue';
 import { useQuasar } from 'quasar';
+const $q = useQuasar();
 const drawerOpen = ref(false);
 const drawerExpand = ref(true);
 const width = $q.screen.gt.sm ? ref(75) : 250;
-const $q = useQuasar();
 const toggleDrawer = () => {
   drawerOpen.value = !drawerOpen.value
   drawerExpand.value = true
@@ -204,7 +204,7 @@ export default {
       drawerExpand,
       width,
       toggleDrawer,
-      resizeDrawer
+      resizeDrawer,
     };
   },
 };
