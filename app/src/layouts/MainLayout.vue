@@ -97,7 +97,7 @@
         unelevated
         size="sm"
         round
-        :icon="drawerExpand ? 'bi-chevron-left' : 'bi-chevron-right'"
+        :icon="drawerExpand ? 'bi-chevron-right' : 'bi-chevron-left'"
         @click="resizeDrawer"
       />
       <!-- drawer content -->
@@ -160,7 +160,7 @@
       </q-page>
     </q-page-container>
 
-    <q-footer elevated class="bg-grey-8 text-white" v-if="$q.screen.lt.md">
+    <q-footer elevated class="bg-grey-8 text-white" v-model="$q.screen.lt.md">
       <q-tabs dense class="text-grey-1" stretch switch-indicator indicator-color="white">
         <q-route-tab to="/" exact icon="bi-house" dense />
         <q-route-tab to="/work/add" exact icon="bi-plus-square" dense />
@@ -174,30 +174,33 @@
 import { ref } from 'vue';
 import Avatar from 'src/components/Avatar.vue';
 import { useQuasar } from 'quasar';
-const $q = useQuasar();
-const drawerOpen = ref(false);
-const drawerExpand = ref(true);
-const width = $q.screen.gt.sm ? ref(75) : 250;
-const toggleDrawer = () => {
-  drawerOpen.value = !drawerOpen.value
-  drawerExpand.value = true
-}
-
-const resizeDrawer = () => {
-  if ($q.screen.gt.md) {
-    width.value === 250 ? width.value = 75 : width.value = 250
-    drawerExpand.value = !drawerExpand.value
-  }
-}
 
 export default {
   components: {
     Avatar,
   },
   setup() {
-    // if ($q.screen.gt.sm === true) width.value = 75
+    const $q = useQuasar();
+    const drawerOpen = ref(false);
+    const drawerExpand = ref(true);
+    const width = ref(250);
 
-    console.log($q)
+    const toggleDrawer = () => {
+      drawerOpen.value = !drawerOpen.value
+      drawerExpand.value = true
+    }
+
+    const resizeDrawer = () => {
+      if ($q.screen.gt.sm) {
+        width.value === 250 ? width.value = 75 : width.value = 250
+        drawerExpand.value = !drawerExpand.value
+      } else {
+        width.value = 250
+        drawerExpand.value = true
+      }
+    }
+
+    if($q.screen.gt.sm || !drawerExpand.value ) width.value= 75; 
 
     return {
       drawerOpen,
