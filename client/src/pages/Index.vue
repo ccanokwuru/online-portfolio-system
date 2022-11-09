@@ -1,109 +1,158 @@
 <script setup lang="ts">
-// import { ref } from 'vue'
-import CardDefault from '../components/CardDefault.vue'
+  import { onMounted, Ref, ref } from "vue";
+  import { api } from "../api";
+  import CardDefault from "../components/CardDefault.vue";
 
+  const artWorks: Ref<{ works: any[]; total: number; pages: number }> = ref({
+    works: [],
+    total: 0,
+    pages: 0,
+  });
+
+  const artists: Ref<{ artists: any[]; total: number; pages: number }> = ref({
+    artists: [],
+    total: 0,
+    pages: 0,
+  });
+
+  onMounted(async () => {
+    artWorks.value = await (await fetch(`${api}/work/get-all`)).json();
+    artists.value = await (await fetch(`${api}/artist/get-all`)).json();
+  });
 </script>
 <template>
-    <main>
-        <section class="bg-[#BBC1CF] hero">
-            <div class="container flex md:flex-wrap h-full flex-wrap-reverse relative">
-                <div
-                    class="self-center flex-col w-full md:w-6/12 text-center md:text-left relative"
-                >
-                    <div
-                        class="text-[10rem] tracking-[0.15em] uppercase font-bold text-red-900 opacity-[0.09] absolute left-[-9rem] hidden md:flex top-0 bottom-0"
-                    >
-                        <div class="self-center text-justify w-8/12s">
-                            <h2 class="!m-0 p-0">see my</h2>
-                            <h2 class="!m-0 p-0">works</h2>
-                        </div>
-                    </div>
+  <main>
+    <!-- hero section -->
+    <section class="bg-[#BBC1CF] hero relative">
+      <div class="container flex flex-wrap-reverse h-full relative">
+        <div
+          class="text-[7rem] lg:text-[8rem] xl:text-[10rem] tracking-[0.15em] uppercase font-bold text-red-900 opacity-[0.08] absolute self-center left-[-10%] hidden md:flex md:items-center top-0 bottom-0"
+        >
+          <div class="self-center text-justify min-w-screen">
+            <h2 class="leading-normal">
+              see my <br />
+              works
+            </h2>
+          </div>
+        </div>
 
-                    <div class="self-center flex-grow">
-                        <h1 class="lg:text-5xl md:text-3xl text-lg font-bold my-0">Creativity</h1>
-                        <h1 class="lg:text-5xl md:text-3xl text-lg font-bold my-0">& CREATIVES</h1>
-                        <p class="lg:text-lg">Create Your Portfolio in Minutes</p>
-                    </div>
+        <div
+          class="self-center items-end h-full flex-col w-full md:w-4/12 grow text-center md:text-left relative z-50"
+        >
+          <div
+            class="self-center items-center justify-center grow flex flex-col gap-3 w-fit whitespace-nowrap"
+          >
+            <h1 class="md:text-[4rem] text-[3rem] font-bold my-0 leading-none">
+              Creativity <br />
+              & CREATIVES
+            </h1>
+          </div>
+          <div class="lg:text-lg py-3">Create Your Portfolio in Minutes</div>
 
-                    <div class="my-10">
-                        <router-link
-                            to="#"
-                            class="btn bg-opacity-20 bg-slate-900 my-6 md:font-semibold text-white lg:text-4xl md:text-2xl p-2 bg-blur"
-                        >Lets Start The Journey</router-link>
-                    </div>
-                </div>
-                <div class="text-center w-full md:w-6/12">
-                    <div class="sm:left-0">
-                        <img src="../assets/head.png" alt="creative image" />
-                    </div>
-                </div>
-            </div>
-        </section>
-        <section>
-            <div class="container my-7 relative">
-                <h2 class="header-text">Exhibitions & Auctions</h2>
-                <div
-                    class="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 justify-center content-center"
-                >
-                    <div v-for="(n, index) in 4" :key="index" class="p-6">
-                        <CardDefault
-                            class="bg-gray-100 card"
-                            :open-in-blank="true"
-                            :rounded-image="true"
-                            :rounded="true"
-                            header="Anokwuru Chisom"
-                            description="Consectetur minim nostrud in eu."
-                            href="/gallery"
-                            image-url="https://i.pravatar.cc/"
-                        />
-                    </div>
-                </div>
-                <p class="text-right">
-                    <a href="#" class="font-semibold hover:underline-offset-1 hover:underline">
-                        see more
-                        <span class="text-red-900">
-                            <i class="bi bi-chevron-right"></i>
-                        </span>
-                    </a>
-                </p>
-            </div>
-        </section>
-        <section>
-            <div class="container mt-7 pb-7 relative">
-                <h2 class="header-text">Talents Onboard</h2>
-                <div
-                    class="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 justify-center content-center"
-                >
-                    <div v-for="(n, index) in 4" :key="index" class="p-6">
-                        <CardDefault
-                            class="bg-gray-100 card"
-                            :open-in-blank="true"
-                            :rounded-image="true"
-                            :rounded="true"
-                            header="Anokwuru Chisom"
-                            description="Consectetur minim nostrud in eu."
-                            href="/studio/someOne"
-                            image-url="https://i.pravatar.cc/"
-                        />
-                    </div>
-                </div>
+          <div class="my-10">
+            <router-link
+              to="/login"
+              class="btn bg-opacity-20 bg-slate-900 my-6 md:font-semibold text-white lg:text-2xl text-xl p-2 px-4 bg-blur"
+              >Let's Journey</router-link
+            >
+          </div>
+        </div>
+        <div class="text-center w-full md:w-8/12">
+          <div class="sm:left-0 flex flex-col items-center relative">
+            <img
+              src="../assets/head.png"
+              alt="creative image"
+              class="w-[80%]"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
 
-                <p class="text-right">
-                    <a href="#" class="font-semibold hover:underline-offset-1 hover:underline">
-                        see more
-                        <span class="text-red-900">
-                            <i class="bi bi-chevron-right"></i>
-                        </span>
-                    </a>
-                </p>
-            </div>
-        </section>
-    </main>
+    <!-- art exhibition -->
+    <section>
+      <div class="container my-7 relative">
+        <h2 class="header-text">Exhibitions & Auctions</h2>
+        <div
+          class="flex overflow-hidden overflow-x-auto gap-10 p-6 content-center"
+        >
+          <div
+            v-for="work in artWorks.works"
+            :key="work.id"
+            class="min-w-[80%] sm:min-w-[40%] md:min-w-[20%] lg:min-w-[10%] md:max-w-[15rem] grow md:shrink-0"
+          >
+            <CardDefault
+              class="bg-gray-100"
+              :open-in-blank="true"
+              :rounded-image="true"
+              :rounded="true"
+              :header="work.title"
+              :description="work.description"
+              href="/gallery"
+              :image-url="work.files.images[0]"
+            />
+          </div>
+        </div>
+        <p class="text-right">
+          <router-link
+            to="/exhibitions"
+            class="font-semibold hover:underline-offset-1 hover:underline"
+          >
+            see more
+            <span class="text-red-900">
+              <i class="bi bi-chevron-right"></i>
+            </span>
+          </router-link>
+        </p>
+      </div>
+    </section>
+
+    <!-- artists and creatives -->
+    <section>
+      <div class="container mt-7 pb-7 relative">
+        <h2 class="header-text">Talents Onboard</h2>
+        <div
+          class="flex overflow-hidden overflow-x-auto gap-10 p-6 content-center"
+        >
+          <div
+            v-for="artist in artists.artists"
+            :key="artist.id"
+            class="min-w-[80%] sm:min-w-[40%] md:min-w-[20%] lg:min-w-[10%] md:max-w-[15rem] grow md:shrink-0"
+          >
+            <CardDefault
+              class="bg-gray-100 card"
+              :open-in-blank="true"
+              :rounded-image="true"
+              :rounded="true"
+              :header="
+                artist.profile.first_name + ' ' + artist.profile.last_name
+              "
+              :description="'@' + artist.profile.display_name"
+              :href="'/studio/' + artist.profile.display_name"
+              :image-url="artist.profile.avatar"
+            />
+          </div>
+        </div>
+
+        <p class="text-right">
+          <router-link
+            to="/artists"
+            class="font-semibold hover:underline-offset-1 hover:underline"
+          >
+            see more
+            <span class="text-red-900">
+              <i class="bi bi-chevron-right"></i>
+            </span>
+          </router-link>
+        </p>
+      </div>
+    </section>
+  </main>
 </template>
 
 <style scoped>
-.hero {
+  .hero {
     background: linear-gradient(180deg, #bbc1cf 12.96%, #e5e9ec 65.89%);
     @apply min-h-[500px];
-}
+  }
 </style>
