@@ -39,7 +39,8 @@
           <i class="bi bi-arrow-right"></i>
         </router-link>
       </div>
-      <div class="scroll-hor">
+
+      <div class="scroll-hor container">
         <div
           v-for="work in category.works"
           v-show="Array.prototype.indexOf(work) < 9"
@@ -47,7 +48,6 @@
           class="min-w-[80%] sm:min-w-[40%] md:min-w-[20%] lg:min-w-[10%] md:max-w-[15rem] grow md:shrink-0"
         >
           <CardDefault
-            class="mx-3"
             :open-in-blank="true"
             :rounded-image="false"
             :rounded="false"

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-  import { Ref, ref, onMounted, computed } from "vue";
-  import { RouterLink, useRoute } from "vue-router";
+  import { Ref, ref, computed, watch, onMounted } from "vue";
+  import { useRoute } from "vue-router";
   import { api } from "../../api";
   import CardDefault from "../../components/CardDefault.vue";
 
@@ -14,51 +14,71 @@
     updatedAt: string | Date;
   }
   const route = useRoute();
+  const currentRoute = computed(() => route);
 
   const params = computed(() => route.params);
-
   const category: Ref<CategoryI | undefined> = ref();
 
-  const { id, cat } = params.value;
-
   onMounted(async () => {
-    category.value = cat
+    category.value = params.value?.cat
       ? await (
           await fetch(`${api}/work/get-all/c`, {
             method: "post",
-            body: JSON.stringify({ category: cat }),
+            body: JSON.stringify({ category: params.value.cat }),
             headers: {
               "Content-Type": "application/json",
             },
           })
         ).json()
-      : await (await fetch(`${api}/work/get-all/cid/${id}`)).json();
+      : params.value?.id
+      ? await (await fetch(`${api}/work/get-all/cid/${params.value.id}`)).json()
+      : undefined;
+  });
 
-    console.log({ category: category.value });
+  watch(params, async () => {
+    category.value = params.value?.cat
+      ? await (
+          await fetch(`${api}/work/get-all/c`, {
+            method: "post",
+            body: JSON.stringify({ category: params.value.cat }),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
+        ).json()
+      : params.value?.id
+      ? await (await fetch(`${api}/work/get-all/cid/${params.value.id}`)).json()
+      : undefined;
   });
 </script>
 <template>
   <section class="flex flex-col bg-transparent gap-6 pt-20 container">
     <div class="flex items-center content-center justify-between">
-      <h2 class="header-text capitalize">All in {{ category?.name }}</h2>
+      <h2 class="header-text capitalize">
+        All in {{ params?.cat ?? category?.name }}
+      </h2>
     </div>
     <div class="flex flex-wrap gap-6">
       <div
+        v-if="category?.works.length"
         v-for="work in category?.works"
-        v-show="Array.prototype.indexOf(work) < 9"
         :key="work.id"
         class="min-w-[80%] sm:min-w-[40%] md:min-w-[20%] lg:min-w-[10%] md:max-w-[15rem] grow md:shrink-0"
       >
         <CardDefault
-          class="mx-3"
           :open-in-blank="true"
-          :rounded-image="true"
-          :rounded="true"
+          :rounded-image="false"
+          :rounded="false"
           :header="work.title"
           :description="work.description"
           href="/gallery"
           :image-url="work.files.images[0]"
         />
+      </div>
+      <div v-else class="grow flex items-center justify-center">
+        <p class="capitalize font-bold text-4xl opacity-50 p-3">
+          Nothing Here for now
+        </p>
       </div>
     </div>
   </section>

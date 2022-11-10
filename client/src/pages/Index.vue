@@ -39,14 +39,13 @@
         <div
           class="self-center items-end h-full flex-col w-full md:w-4/12 grow text-center md:text-left relative z-50"
         >
-          <div
-            class="self-center items-center justify-center grow flex flex-col gap-3 w-fit whitespace-nowrap"
+          <h1
+            class="md:text-[4rem] text-[3rem] font-bold my-0 leading-none whitespace-nowrap"
           >
-            <h1 class="md:text-[4rem] text-[3rem] font-bold my-0 leading-none">
-              Creativity <br />
-              & CREATIVES
-            </h1>
-          </div>
+            Creativity <br />
+            & CREATIVES
+          </h1>
+
           <div class="lg:text-lg py-3">Create Your Portfolio in Minutes</div>
 
           <div class="my-10">
@@ -57,7 +56,7 @@
             >
           </div>
         </div>
-        <div class="text-center w-full md:w-8/12">
+        <div class="text-center w-full md:w-8/12 md:text-right lg:text-left">
           <div class="sm:left-0 flex flex-col items-center relative">
             <img
               src="../assets/head.png"
@@ -73,13 +72,11 @@
     <section>
       <div class="container my-7 relative">
         <h2 class="header-text">Exhibitions & Auctions</h2>
-        <div
-          class="flex overflow-hidden overflow-x-auto gap-10 p-6 content-center"
-        >
+        <div class="scroll-hor">
           <div
             v-for="work in artWorks.works"
             :key="work.id"
-            class="min-w-[80%] sm:min-w-[40%] md:min-w-[20%] lg:min-w-[10%] md:max-w-[15rem] grow md:shrink-0"
+            class="min-w-[80%] sm:min-w-[40%] md:min-w-[20%] lg:min-w-[10%] md:max-w-[15rem] grow sm:shrink"
           >
             <CardDefault
               class="bg-gray-100"
@@ -92,6 +89,7 @@
               :image-url="work.files.images[0]"
             />
           </div>
+          
         </div>
         <p class="text-right">
           <router-link
@@ -111,13 +109,11 @@
     <section>
       <div class="container mt-7 pb-7 relative">
         <h2 class="header-text">Talents Onboard</h2>
-        <div
-          class="flex overflow-hidden overflow-x-auto gap-10 p-6 content-center"
-        >
+        <div class="scroll-hor">
           <div
             v-for="artist in artists.artists"
             :key="artist.id"
-            class="min-w-[80%] sm:min-w-[40%] md:min-w-[20%] lg:min-w-[10%] md:max-w-[15rem] grow md:shrink-0"
+            class="min-w-[80%] sm:min-w-[40%] md:min-w-[20%] lg:min-w-[10%] md:max-w-[15rem] grow sm:shrink"
           >
             <CardDefault
               class="bg-gray-100 card"

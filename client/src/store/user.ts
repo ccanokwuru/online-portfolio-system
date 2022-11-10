@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { computed } from "vue";
+import { computed, watch } from "vue";
 import { api } from "../api";
 
 interface UserI {
@@ -18,19 +18,25 @@ interface LoginI {
   password: string;
 }
 
-const authToken = computed(() => localStorage.getItem("token") ?? undefined);
+const authToken = computed(() => {
+  return localStorage.getItem("token") ?? undefined;
+});
 
 const user = computed(() => {
   const user = localStorage.getItem("user");
   return user ? JSON.parse(user) : undefined;
 });
 
+watch(authToken, () => {
+  console.log({ authToken: authToken.value, user: user.value });
+});
+
 export const userStore = defineStore("user", {
   // other options...
   state: (): UserI => {
     return {
-      authToken: authToken.value,
-      user: user.value,
+      authToken: computed(() => authToken.value).value,
+      user: computed(() => user.value).value,
     };
   },
   actions: {
@@ -44,9 +50,10 @@ export const userStore = defineStore("user", {
       });
       if (!response.ok) return await response.json();
       const json = await response.json();
-      console.log(json);
       localStorage.setItem("token", json.authToken);
       localStorage.setItem("user", JSON.stringify(json.user));
+      this.authToken = json.authToken;
+      this.user = json.user;
       return {
         message: "success",
       };

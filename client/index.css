@@ -29,7 +29,7 @@
   }
 
   .scroll-hor {
-    @apply flex items-center overflow-x-auto container;
+    @apply flex overflow-hidden overflow-x-auto gap-10 p-6 content-center;
   }
 
   .scroll-hor::-webkit-scrollbar {

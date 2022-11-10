@@ -1,8 +1,12 @@
 <script setup lang="ts">
+  import { computed } from "vue";
+  import { RouterLink } from "vue-router";
   import { app } from "../api";
   import { userStore } from "../store/user";
 
   const { authToken } = userStore();
+
+  const auth = computed(() => authToken);
 </script>
 
 <template>
@@ -22,13 +26,13 @@
         <router-link to="/artists" exact>Artists</router-link>
       </nav>
       <router-link
-        v-show="!authToken"
+        v-show="!auth"
         to="/login"
         class="font-semibold md:font-bold text-red-900 self-center md:uppercase"
         >Signin</router-link
       >
       <a
-        v-show="authToken"
+        v-show="auth"
         :href="app"
         target="_blank"
         class="font-semibold md:font-bold text-red-900 self-center"

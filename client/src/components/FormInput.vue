@@ -3,7 +3,7 @@
 
   const props = defineProps<{
     label?: string;
-    type: string;
+    type?: string;
     required?: boolean;
     modelValue: any;
   }>();
@@ -45,7 +45,7 @@
       />
       <div
         v-if="type === 'password'"
-        class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
+        class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 cursor-pointer"
       >
         <p class="font-semibold" @click="showPass = !showPass">
           <i

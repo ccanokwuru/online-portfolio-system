@@ -6,7 +6,7 @@
 
   <div class="w-screen h-screen flex bg-gray-200 content-center">
     <div class="self-center text-center container">
-      <h1 class="text-3xl text-stale-900 my-4 font-bold">
+      <h1 class="text-3xl text-stale-900 py-4 font-bold">
         Ooops!!
         <br />Not Reachable
       </h1>
