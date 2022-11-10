@@ -19,7 +19,7 @@ import Contact from "../pages/Artists.vue";
 // Gallery Pages
 import Root from "../pages/gallery/Root.vue";
 import CategoryList from "../pages/gallery/CategoryList.vue";
-import List from "../pages/Artists.vue";
+import ArtWorkDetail from "../pages/gallery/ArtWorkDetail.vue";
 import Cart from "../pages/Artists.vue";
 import Search from "../pages/Artists.vue";
 
@@ -55,6 +55,7 @@ const gallery: RouteRecordRaw = {
   children: [
     { path: "", name: "exhibition", component: Root },
     { path: "cat/:id/:name", name: "category", component: CategoryList },
+    { path: "item/:id/:name", name: "item detail", component: ArtWorkDetail },
     { path: "search", name: "exhibition search", component: Search },
     { path: "cart", name: "exhibition cart", component: Cart },
     { path: ":cat", name: "category name", component: CategoryList },

@@ -27,10 +27,6 @@ const user = computed(() => {
   return user ? JSON.parse(user) : undefined;
 });
 
-watch(authToken, () => {
-  console.log({ authToken: authToken.value, user: user.value });
-});
-
 export const userStore = defineStore("user", {
   // other options...
   state: (): UserI => {
@@ -58,6 +54,6 @@ export const userStore = defineStore("user", {
         message: "success",
       };
     },
-    refreshAuth() {},
+    async refreshAuth() {},
   },
 });

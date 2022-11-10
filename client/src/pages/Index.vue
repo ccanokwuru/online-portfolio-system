@@ -85,11 +85,10 @@
               :rounded="true"
               :header="work.title"
               :description="work.description"
-              href="/gallery"
+              :href="`/exhibitions/item/${work.id}/${work.title}`"
               :image-url="work.files.images[0]"
             />
           </div>
-          
         </div>
         <p class="text-right">
           <router-link

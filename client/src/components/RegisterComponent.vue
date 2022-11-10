@@ -9,17 +9,33 @@
 
   const successfull = ref(false);
   const loading = ref(false);
+  const is_artist = ref(false);
   const email = ref("");
   const password = ref("");
   const last_name = ref("");
-  const other_name = ref("");
-  const display_name = ref("");
+  const other_name = ref();
+  const display_name = ref();
   const first_name = ref("");
   const confirm_password = ref("");
 
   const submit = async () => {
     loading.value = true;
-    const response = await fetch(`${api}auth/register`);
+    const response = await fetch(`${api}/auth/register`, {
+      method: "post",
+      body: JSON.stringify({
+        email: email.value,
+        password: password.value,
+        display_name: display_name.value,
+        first_name: first_name.value,
+        last_name: last_name.value,
+        other_name: other_name.value,
+        confirm_password: confirm_password.value,
+        is_artist: is_artist.value,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
     loading.value = false;
     if (response.status === 201) {
       successfull.value = true;
@@ -29,7 +45,7 @@
     Swal.close();
     await Swal.fire({
       title: `${json.message}`,
-      text: `${json.errors}`,
+      text: `${json.errors ?? ""}`,
       showConfirmButton: false,
     });
   };
@@ -106,6 +122,13 @@
             v-model="confirm_password"
           />
         </div>
+      </div>
+
+      <div
+        class="flex w-full flex-wrap gap-x-5 gap-y-2 justify-center cursor-pointer"
+      >
+        <input type="checkbox" v-model="is_artist" name="artist" id="artist" />
+        <label for="artist" class="cursor-pointer"> I am an Artist</label>
       </div>
 
       <div class="flex w-full flex-wrap gap-x-5 gap-y-2 justify-center">

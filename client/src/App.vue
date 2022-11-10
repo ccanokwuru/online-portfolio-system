@@ -16,10 +16,7 @@
 </script>
 
 <template>
-  <div
-    class="h-screen fixed w-screen overflow-hidden overflow-y-auto"
-    ref="main"
-  >
+  <div class="h-screen w-screen overflow-hidden overflow-y-auto" ref="main">
     <router-view />
   </div>
 </template>

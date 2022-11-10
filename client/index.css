@@ -21,7 +21,20 @@
   }
 
   .card {
-    @apply transition-all duration-200 delay-100 hover:underline;
+    @apply hover:scale-105 transition-all duration-500 flex flex-col relative hover:shadow delay-100;
+  }
+
+  .card .header {
+    @apply text-base md:text-lg md:font-bold font-semibold leading-tight md:leading-normal truncate transition-all duration-500 delay-100;
+  }
+
+  .card .description{
+    @apply text-opacity-70 font-light md:mb-2 mb-1 text-sm md:text-base w-full transition-all duration-500 delay-100;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
   .header-text {
