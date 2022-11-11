@@ -13,7 +13,7 @@ import Auth from "../pages/Auth.vue";
 // Studio Pages
 import Home from "../pages/studio/Home.vue";
 import About from "../pages/Artists.vue";
-import Projects from "../pages/Artists.vue";
+import Projects from "../pages/studio/Projects.vue";
 import Contact from "../pages/Artists.vue";
 
 // Gallery Pages
@@ -44,6 +44,11 @@ const studio: RouteRecordRaw = {
     { path: "", name: "studio home", component: Home },
     { path: "about", name: "studio about", component: About },
     { path: "projects", name: "studio projects", component: Projects },
+    {
+      path: "projects/:id/:name",
+      name: "studio projects single",
+      component: Projects,
+    },
     { path: "contact", name: "studio hire me", component: Contact },
   ],
 };

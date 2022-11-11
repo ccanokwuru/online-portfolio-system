@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+  import FooterComponent from "../components/FooterComponent.vue";
   import HeaderComponent from "../components/HeaderComponent.vue";
 </script>
 <template>
@@ -17,17 +18,5 @@
       >
     </div>
   </div>
-  <footer class="py-4 text-white bg-slate-900 text-xl fixed bottom-0 w-screen">
-    <div class="container flex content-center justify-between">
-      &copy; Prolifolio
-      <div class="gap-x-2 flex pr-4">
-        <a href="#">
-          <i class="bi bi-youtube"></i>
-        </a>
-        <a href="#">
-          <i class="bi bi-twitter"></i>
-        </a>
-      </div>
-    </div>
-  </footer>
+  <FooterComponent />
 </template>

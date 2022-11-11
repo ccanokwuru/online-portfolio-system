@@ -46,8 +46,10 @@ export const userStore = defineStore("user", {
       });
       if (!response.ok) return await response.json();
       const json = await response.json();
-      localStorage.setItem("token", json.authToken);
-      localStorage.setItem("user", JSON.stringify(json.user));
+      await (async () => {
+        localStorage.setItem("token", json.authToken);
+        localStorage.setItem("user", JSON.stringify(json.user));
+      })();
       this.authToken = json.authToken;
       this.user = json.user;
       return {

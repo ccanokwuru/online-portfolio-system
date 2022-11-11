@@ -16,18 +16,16 @@
 
   const logout = async () => {
     loading.value = true;
-    const response = await fetch(`${api}/auth/register`, {
+    const response = await fetch(`${api}/auth/logout`, {
       method: "post",
-      headers: {
-        "Content-Type": "application/json",
-      },
     });
     loading.value = false;
-    if (response.status === 201) {
+    if (response.status === 200) {
       successfull.value = true;
       return router.push("/");
     }
     const json = await response.json();
+    localStorage.clear();
     Swal.close();
     await Swal.fire({
       title: `${json.message}`,
@@ -46,7 +44,7 @@
         <img src="../assets/logo.png" class="nav-logo" />
       </router-link>
       <nav
-        class="flex md:flex-grow gap-x-2 md:gap-x-5 justify-center content-center self-center md:font-semibold"
+        class="flex md:flex-grow gap-x-2 md:gap-x-5 justify-center content-center self-center font-[500] md:font-semibold"
       >
         <router-link to="/" exact>Home</router-link>
         <router-link to="/exhibitions" exact>Exhibitions</router-link>
@@ -67,21 +65,21 @@
         Account
       </button>
       <div
-        class="transition-all duration-500 absolute rounded-md top-[-100vh] right-0 p-3 flex flex-col items-start"
+        class="transition-all duration-500 absolute rounded-md right-4 p-3 flex flex-col items-start"
         :class="{
-          'top-15 shadow  bg-white z-[99999]': drop,
-          'opacity-0': !drop,
+          'top-[3rem] shadow-xl  bg-white z-[99999]': drop,
+          'opacity-0 top-[-100vh] ': !drop,
         }"
       >
         <a
           :href="app"
           target="_blank"
-          class="font-semibold md:font-bold text-red-900 self-center"
+          class="font-semibold md:font-bold text-red-900 self-center w-full"
           >Dashboard</a
         >
         <div
           target="_blank"
-          class="font-semibold md:font-bold text-red-900 self-center"
+          class="font-semibold md:font-bold text-red-900 self-center w-full cursor-pointer"
           @click="logout"
         >
           Logout

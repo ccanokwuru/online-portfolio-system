@@ -23,7 +23,7 @@
   });
 </script>
 <template>
-  <div class="flex flex-col bg-transparent gap-2 pt-20">
+  <div class="flex flex-col bg-transparent gap-2">
     <section
       v-for="(category, index) in categories"
       :key="category.id"
@@ -48,12 +48,12 @@
           class="min-w-[80%] sm:min-w-[40%] md:min-w-[20%] lg:min-w-[10%] md:max-w-[15rem] grow md:shrink-0"
         >
           <CardDefault
-            :open-in-blank="true"
+            :open-in-blank="false"
             :rounded-image="false"
             :rounded="false"
             :header="work.title"
             :description="work.description"
-            href="/gallery"
+            :href="`/exhibitions/item/${work.id}/${work.title}`"
             :image-url="work.files.images[0]"
           />
         </div>

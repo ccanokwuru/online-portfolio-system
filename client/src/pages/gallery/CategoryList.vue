@@ -52,7 +52,7 @@
   });
 </script>
 <template>
-  <section class="flex flex-col bg-transparent gap-6 pt-20 container">
+  <section class="flex flex-col bg-transparent gap-6 container">
     <div class="flex items-center content-center justify-between">
       <h2 class="header-text capitalize">
         All in {{ params?.cat ?? category?.name }}
@@ -66,12 +66,12 @@
         class="min-w-[80%] sm:min-w-[40%] md:min-w-[20%] lg:min-w-[10%] md:max-w-[15rem] grow md:shrink-0"
       >
         <CardDefault
-          :open-in-blank="true"
+          :open-in-blank="false"
           :rounded-image="false"
           :rounded="false"
           :header="work.title"
           :description="work.description"
-          href="/gallery"
+          :href="`/exhibitions/item/${work.id}/${work.title}`"
           :image-url="work.files.images[0]"
         />
       </div>

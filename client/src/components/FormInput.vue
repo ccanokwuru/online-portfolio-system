@@ -15,17 +15,6 @@
       return props.modelValue;
     },
     set(value: string | number) {
-      if (typeof value === "string" && props.type === "card_expires") {
-        if (value.length >= 2 && value.substring(2, 3) !== "/")
-          value =
-            value.substring(0, 2) + "/" + value.substring(2, value.length);
-
-        if (Number(value.substring(0, 2)) > 12)
-          value = "12" + value.substring(2, 5);
-
-        if (value.length > 5) value = value.substring(0, 5);
-      }
-
       emit("update:modelValue", value);
     },
   });

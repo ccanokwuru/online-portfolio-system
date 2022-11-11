@@ -14,32 +14,28 @@
   });
 </script>
 <template>
-  <main class="min-h-screen">
-    <section class="pt-12">
-      <div class="container relative">
-        <h2 class="header-text">See All Artists Here</h2>
-        <div class="flex flex-wrap gap-10 p-6">
-          <div
-            v-for="artist in artists.artists"
-            :key="artist.id"
-            class="min-w-[80%] sm:min-w-[40%] md:min-w-[20%] lg:min-w-[10%] md:max-w-[15rem] grow md:shrink-0"
-          >
-            <CardDefault
-              :open-in-blank="true"
-              :rounded-image="true"
-              :rounded="true"
-              :header="
-                artist.profile.first_name + ' ' + artist.profile.last_name
-              "
-              :description="'@' + artist.profile.display_name"
-              :href="'/studio/' + artist.profile.display_name"
-              :image-url="artist.profile.avatar"
-            />
-          </div>
+  <section class="py-5">
+    <div class="container relative">
+      <h2 class="header-text">See All Artists Here</h2>
+      <div class="flex flex-wrap gap-10 p-6">
+        <div
+          v-for="artist in artists.artists"
+          :key="artist.id"
+          class="min-w-[80%] sm:min-w-[40%] md:min-w-[20%] lg:min-w-[10%] md:max-w-[15rem] grow md:shrink-0"
+        >
+          <CardDefault
+            :open-in-blank="true"
+            :rounded-image="true"
+            :rounded="true"
+            :header="artist.profile.first_name + ' ' + artist.profile.last_name"
+            :description="'@' + artist.profile.display_name"
+            :href="'/studio/' + artist.profile.display_name"
+            :image-url="artist.profile.avatar"
+          />
         </div>
       </div>
-    </section>
-  </main>
+    </div>
+  </section>
 </template>
 
 <style scoped>

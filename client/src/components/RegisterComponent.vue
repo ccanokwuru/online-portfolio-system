@@ -143,7 +143,7 @@
         class="flex w-full flex-wrap gap-x-5 gap-y-2 items-center font-medium max-w-sm mx-auto"
       >
         Have An Account?
-        <router-link to="/register" class="text-white bg-slate-900 btn grow">
+        <router-link to="/login" class="text-white bg-slate-900 btn grow">
           Login
         </router-link>
       </div>
