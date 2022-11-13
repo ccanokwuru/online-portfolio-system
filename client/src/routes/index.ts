@@ -7,21 +7,8 @@ import GalleryLayout from "../layouts/GalleryLayout.vue";
 // Main Pages
 import NotFound from "../pages/NotFound.vue";
 import Index from "../pages/Index.vue";
-import Artists from "../pages/Artists.vue";
-import Auth from "../pages/Auth.vue";
-
-// Studio Pages
-import Home from "../pages/studio/Home.vue";
-import About from "../pages/Artists.vue";
-import Projects from "../pages/studio/Projects.vue";
-import Contact from "../pages/Artists.vue";
 
 // Gallery Pages
-import Root from "../pages/gallery/Root.vue";
-import CategoryList from "../pages/gallery/CategoryList.vue";
-import ArtWorkDetail from "../pages/gallery/ArtWorkDetail.vue";
-import Cart from "../pages/Artists.vue";
-import Search from "../pages/Artists.vue";
 
 const main: RouteRecordRaw = {
   path: "/",
@@ -29,10 +16,27 @@ const main: RouteRecordRaw = {
   component: MainLayout,
   children: [
     { path: "", name: "home", component: Index },
-    { path: "artists", name: "artists", component: Artists },
-    { path: "login", name: "login", component: Auth },
-    { path: "register", name: "register", component: Auth },
-    { path: "news", name: "news", component: Index },
+    {
+      path: "artists",
+      name: "artists",
+      component: () => import("../pages/Artists.vue"),
+    },
+    {
+      path: "login",
+      name: "login",
+      component: () => import("../pages/Auth.vue"),
+    },
+    {
+      path: "register",
+      name: "register",
+      component: () => import("../pages/Auth.vue"),
+    },
+    // { path: "articles", name: "articles", component: Index },
+    {
+      path: "/:pathMatch(.*)*",
+      name: "NotFound",
+      component: NotFound,
+    },
   ],
 };
 
@@ -41,15 +45,36 @@ const studio: RouteRecordRaw = {
   // exact,
   component: StudioLayout,
   children: [
-    { path: "", name: "studio home", component: Home },
-    { path: "about", name: "studio about", component: About },
-    { path: "projects", name: "studio projects", component: Projects },
     {
-      path: "projects/:id/:name",
-      name: "studio projects single",
-      component: Projects,
+      path: "",
+      name: "studio home",
+      component: () => import("../pages/studio/Home.vue"),
     },
-    { path: "contact", name: "studio hire me", component: Contact },
+    {
+      path: "about",
+      name: "studio about",
+      component: () => import("../pages/studio/About.vue"),
+    },
+    {
+      path: "projects",
+      name: "studio projects",
+      component: () => import("../pages/studio/Projects.vue"),
+    },
+    {
+      path: "projects/itm/:id/:name",
+      name: "studio projects single",
+      component: () => import("../pages/studio/ProjectsDetail.vue"),
+    },
+    {
+      path: "contact",
+      name: "studio hire me",
+      component: () => import("../pages/studio/Contact.vue"),
+    },
+    {
+      path: "/:pathMatch(.*)*",
+      name: "NotFound",
+      component: NotFound,
+    },
   ],
 };
 
@@ -58,21 +83,44 @@ const gallery: RouteRecordRaw = {
   // exact,
   component: GalleryLayout,
   children: [
-    { path: "", name: "exhibition", component: Root },
-    { path: "cat/:id/:name", name: "category", component: CategoryList },
-    { path: "item/:id/:name", name: "item detail", component: ArtWorkDetail },
-    { path: "search", name: "exhibition search", component: Search },
-    { path: "cart", name: "exhibition cart", component: Cart },
-    { path: ":cat", name: "category name", component: CategoryList },
+    {
+      path: "",
+      name: "exhibition",
+      component: () => import("../pages/gallery/Root.vue"),
+    },
+    {
+      path: "cat/:id/:name",
+      name: "category",
+      component: () => import("../pages/gallery/CategoryList.vue"),
+    },
+    {
+      path: "item/:id/:name",
+      name: "item detail",
+      component: () => import("../pages/gallery/ArtWorkDetail.vue"),
+    },
+    {
+      path: "search",
+      name: "exhibition search",
+      component: () => import("../pages/Artists.vue"),
+    },
+    {
+      path: "cart",
+      name: "exhibition cart",
+      component: () => import("../pages/Artists.vue"),
+    },
+    {
+      path: ":cat",
+      name: "category name",
+      component: () => import("../pages/gallery/CategoryList.vue"),
+    },
+    {
+      path: "/:pathMatch(.*)*",
+      name: "NotFound",
+      component: NotFound,
+    },
   ],
 };
 
-const notFound: RouteRecordRaw = {
-  path: "/:pathMatch(.*)*",
-  name: "NotFound",
-  component: NotFound,
-};
-
-const routes: RouteRecordRaw[] = [main, studio, gallery, notFound];
+const routes: RouteRecordRaw[] = [studio, gallery, main];
 
 export default routes;

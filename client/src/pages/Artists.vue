@@ -29,7 +29,7 @@
             :rounded="true"
             :header="artist.profile.first_name + ' ' + artist.profile.last_name"
             :description="'@' + artist.profile.display_name"
-            :href="'/studio/' + artist.profile.display_name"
+            :href="'/studio/' + artist.profile.display_name.toLowerCase()"
             :image-url="artist.profile.avatar"
           />
         </div>
@@ -38,9 +38,4 @@
   </section>
 </template>
 
-<style scoped>
-  .hero {
-    background: linear-gradient(180deg, #bbc1cf 12.96%, #e5e9ec 65.89%);
-    @apply min-h-[500px];
-  }
-</style>
+<style scoped></style>

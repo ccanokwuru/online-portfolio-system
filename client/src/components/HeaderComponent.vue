@@ -7,9 +7,7 @@
 
   const router = useRouter();
 
-  const { authToken } = userStore();
-
-  const auth = computed(() => authToken);
+  const auth = computed(() => userStore().authToken);
   const drop = ref(false);
   const successfull = ref(false);
   const loading = ref(false);
@@ -17,13 +15,12 @@
   const logout = async () => {
     loading.value = true;
     const response = await fetch(`${api}/auth/logout`, {
-      method: "post",
+      method: "get",
+      headers: {
+        Authorization: `Bearer ${auth.value}`,
+      },
     });
     loading.value = false;
-    if (response.status === 200) {
-      successfull.value = true;
-      return router.push("/");
-    }
     const json = await response.json();
     localStorage.clear();
     Swal.close();
@@ -32,7 +29,15 @@
       text: `${json.errors ?? ""}`,
       showConfirmButton: false,
     });
+    if (response.status === 200) {
+      successfull.value = true;
+      return router.push("/");
+    }
   };
+
+  document.addEventListener("click", () => {
+    if (drop.value === true) drop.value = false;
+  });
 </script>
 
 <template>
@@ -60,7 +65,7 @@
       <button
         v-show="auth"
         class="font-semibold md:font-bold text-red-900 self-center"
-        @click="drop = !drop"
+        @click.stop="drop = !drop"
       >
         Account
       </button>

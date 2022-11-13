@@ -13,10 +13,27 @@ import App from "./App.vue";
 import routes from "./routes";
 import { createPinia } from "pinia";
 import { userStore } from "./store/user";
+import Swal from "sweetalert2";
 
 const router = createRouter({
   routes,
   history: createWebHistory(),
+  scrollBehavior(to, from, savedPosition) {
+    // return desired position
+
+    Swal.close();
+
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve({
+          left: 0,
+          top: 0,
+          behavior: "smooth",
+          el: to.hash ? to.hash : `body`,
+        });
+      }, 100);
+    });
+  },
 });
 const pinia = createPinia();
 
@@ -30,16 +47,18 @@ const isAuthenticated = async (
   to: RouteLocationNormalized | undefined = undefined
 ) => {
   let token: any;
-  if (to?.meta.for === "user") token = await __user.refreshAuth();
+  // if (to?.meta.for === "user")
+  token = await __user.refreshAuth();
   return token?.status === 200;
 };
 
 router.beforeEach(async (to, from, next) => {
   const auth = await isAuthenticated(to);
-  if (!auth && to.meta.requireAuth) next({ name: "login" });
-  else if (auth && !to.meta.requireAuth && to.meta.title !== "404 Not Found")
-    next({ name: "dashboard" });
-  else next();
+  next();
+  // if (!auth && to.meta.requireAuth) next({ name: "login" });
+  // else if (auth && !to.meta.requireAuth && to.meta.title !== "404 Not Found")
+  //   next({ name: "dashboard" });
+  // else next();
 });
 
 app.use(router);

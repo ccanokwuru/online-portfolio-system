@@ -28,10 +28,10 @@
   <section class="bg-[#BBC1CF] hero relative">
     <div class="container flex flex-wrap-reverse h-full relative">
       <div
-        class="text-[7rem] lg:text-[8rem] xl:text-[10rem] tracking-[0.15em] uppercase font-bold text-red-900 opacity-[0.08] absolute self-center left-[-10%] hidden md:flex md:items-center top-0 bottom-0"
+        class="text-[7rem] lg:text-[8rem] xl:text-[10rem] tracking-[0.15em] uppercase font-bold text-red-900 opacity-[0.08] absolute self-center left-[-10%] hidden md:flex md:items-center top-0 bottom-0 z-10"
       >
         <div class="self-center text-justify min-w-screen">
-          <h2 class="leading-normal">
+          <h2 class="leading-normal z-50">
             see my <br />
             works
           </h2>
@@ -117,7 +117,7 @@
             :rounded="true"
             :header="artist.profile.first_name + ' ' + artist.profile.last_name"
             :description="'@' + artist.profile.display_name"
-            :href="'/studio/' + artist.profile.display_name"
+            :href="'/studio/' + artist.profile.display_name.toLowerCase()"
             :image-url="artist.profile.avatar"
           />
         </div>

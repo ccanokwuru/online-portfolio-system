@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-  import { Ref, ref, onMounted, computed } from "vue";
-  import { RouterLink, useRoute, useRouter } from "vue-router";
+  import { ref, onMounted, computed } from "vue";
+  import { useRoute, useRouter } from "vue-router";
   import { api } from "../../api";
-  import CardDefault from "../../components/CardDefault.vue";
   import ShowInRoomComponent from "../../components/ShowInRoomComponent.vue";
+  import NotFound from "../NotFound.vue";
 
   const route = useRoute();
   const router = useRouter();
@@ -21,9 +21,12 @@
     const response = await (await fetch(`${api}/work/${id}`)).json();
     work.value = response?.work;
     activeImage.value = work?.value?.files?.images[0];
+    console.log({ work: work.value });
   });
 </script>
 <template>
+  <NotFound v-show="!work" class="container my-7 relative" />
+
   <section class="flex flex-wrap md:flex-nowrap bg-transparent gap-6 container">
     <div
       class="bg-[#F4F4F2] grow md:w-1/2 relative py-5 pr-5 md:py-10 md:pr-10"
@@ -69,7 +72,7 @@
       class="grow w-full md:w-1/2 z-10 flex flex-col items-start p-5 md:p-10 gap-5"
     >
       <span
-        class="flex gap-1 items-center fixed md:sticky top-20 cursor-pointer hover:animate-bounce"
+        class="flex gap-1 items-center fixed md:sticky top-20 cursor-pointer hover:font-semibold transition-all duration-500"
         @click="router.back()"
       >
         <i class="bi bi-arrow-left-short text-2xl"></i>

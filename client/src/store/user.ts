@@ -4,6 +4,7 @@ import { api } from "../api";
 
 interface UserI {
   authToken?: string;
+  refreshToken?: string;
   user?: {
     email: string;
     id: string;
@@ -18,10 +19,7 @@ interface LoginI {
   password: string;
 }
 
-const authToken = computed(() => {
-  return localStorage.getItem("token") ?? undefined;
-});
-
+const authToken = computed(() => localStorage.getItem("token") ?? undefined);
 const user = computed(() => {
   const user = localStorage.getItem("user");
   return user ? JSON.parse(user) : undefined;
@@ -31,8 +29,10 @@ export const userStore = defineStore("user", {
   // other options...
   state: (): UserI => {
     return {
-      authToken: computed(() => authToken.value).value,
-      user: computed(() => user.value).value,
+      authToken: authToken.value,
+      user: user.value,
+      refreshToken: computed(() => localStorage.getItem("x_token") ?? undefined)
+        .value,
     };
   },
   actions: {
@@ -44,18 +44,54 @@ export const userStore = defineStore("user", {
           "Content-Type": "application/json",
         },
       });
+
       if (!response.ok) return await response.json();
+
       const json = await response.json();
+
       await (async () => {
         localStorage.setItem("token", json.authToken);
         localStorage.setItem("user", JSON.stringify(json.user));
+        localStorage.setItem("x_token", json.refreshToken ?? null);
       })();
+
       this.authToken = json.authToken;
       this.user = json.user;
+      this.refreshToken = json.refreshToken;
+
       return {
         message: "success",
       };
     },
-    async refreshAuth() {},
+
+    async refreshAuth() {
+      const refresh = await fetch(`${api}/auth/refresh`, {
+        method: "post",
+        body: JSON.stringify({ refreshToken: this.refreshToken }),
+        headers: {
+          Authorization: `Bearer ${this.authToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!refresh.ok) {
+        localStorage.clear();
+        sessionStorage.clear();
+      }
+
+      const json = await refresh.json();
+
+      await (async () => {
+        localStorage.setItem("token", json.authToken ?? null);
+        localStorage.setItem("user", JSON.stringify(json.user) ?? null);
+        localStorage.setItem("x_token", json.refreshToken ?? null);
+      })();
+
+      this.authToken = json.authToken;
+      this.refreshToken = json.refreshToken;
+      this.user = json.user;
+
+      return refresh;
+    },
   },
 });
