@@ -11,6 +11,7 @@
   const drop = ref(false);
   const successfull = ref(false);
   const loading = ref(false);
+  const addShadow = ref(false);
 
   const logout = async () => {
     loading.value = true;
@@ -31,6 +32,7 @@
     });
     if (response.status === 200) {
       successfull.value = true;
+      userStore().authToken = undefined;
       return router.push("/");
     }
   };
@@ -38,11 +40,15 @@
   document.addEventListener("click", () => {
     if (drop.value === true) drop.value = false;
   });
+  document.addEventListener("scroll", () => {
+    addShadow.value = window.scrollY >= 100;
+  });
 </script>
 
 <template>
   <header
-    class="sticky top-0 w-screen py-2 z-[99999] bg-opacity-10 bg-slate-900 bg-blur text-sm md:text-base"
+    class="sticky top-0 w-screen py-2 z-[99999] bg-opacity-10 bg-slate-900 bg-blur text-sm transition-all duration-500 md:text-base"
+    :class="{ 'shadow-md': addShadow }"
   >
     <div class="flex container content-center justify-between gap-5 relative">
       <router-link to="/" class="self-center">
@@ -77,7 +83,7 @@
         }"
       >
         <a
-          :href="app"
+          href="/dashboard"
           target="_blank"
           class="font-semibold md:font-bold text-red-900 self-center w-full"
           >Dashboard</a

@@ -16,8 +16,10 @@
   onMounted(async () => {
     const data = await fetch(`${api}/artist/${studio.value}`);
     if (!data.ok) studioInfo.value = undefined;
-    const jsonData = await data.json();
-    studioInfo.value = jsonData?.artist;
+    else {
+      const jsonData = await data.json();
+      studioInfo.value = jsonData?.artist;
+    }
 
     const allWorks = await fetch(
       `${api}/artist/a/${studioInfo.value?.id}/all-works`
@@ -28,7 +30,7 @@
 </script>
 <template>
   <section>
-    <NotFound v-if="!studioInfo" class="container my-7 relative" />
+    <NotFound v-if="!studioWorks?.length" class="container my-7 relative" />
     <div class="container my-7 relative" v-else>
       <h2 class="header-text">Projects</h2>
       <div class="flex flex-wrap gap-10 py-10">

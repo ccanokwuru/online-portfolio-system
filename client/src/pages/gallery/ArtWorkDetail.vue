@@ -25,9 +25,12 @@
   });
 </script>
 <template>
-  <NotFound v-show="!work" class="container my-7 relative" />
+  <NotFound v-show="!work?.id" class="container my-7 relative" />
 
-  <section class="flex flex-wrap md:flex-nowrap bg-transparent gap-6 container">
+  <section
+    class="flex flex-wrap md:flex-nowrap bg-transparent gap-6 container min-h-screen"
+    v-show="work?.id"
+  >
     <div
       class="bg-[#F4F4F2] grow md:w-1/2 relative py-5 pr-5 md:py-10 md:pr-10"
     >

@@ -1,6 +1,7 @@
 import { RouteRecordRaw } from "vue-router";
 // Layouts
 import MainLayout from "../layouts/MainLayout.vue";
+import DashboardLayout from "../layouts/DashboardLayout.vue";
 import StudioLayout from "../layouts/StudioLayout.vue";
 import GalleryLayout from "../layouts/GalleryLayout.vue";
 
@@ -72,7 +73,7 @@ const studio: RouteRecordRaw = {
     },
     {
       path: "/:pathMatch(.*)*",
-      name: "NotFound",
+      name: "studio not found",
       component: NotFound,
     },
   ],
@@ -115,12 +116,50 @@ const gallery: RouteRecordRaw = {
     },
     {
       path: "/:pathMatch(.*)*",
-      name: "NotFound",
+      name: "gallery not found",
       component: NotFound,
     },
   ],
 };
 
-const routes: RouteRecordRaw[] = [studio, gallery, main];
+const dashboard: RouteRecordRaw = {
+  path: "/dashboard/",
+  // exact,
+  component: DashboardLayout,
+  children: [
+    {
+      path: "",
+      name: "dashboard",
+      component: () => import("../pages/dashboard/Index.vue"),
+    },
+    {
+      path: "",
+      name: "dashboard works",
+      component: () => import("../pages/dashboard/Works.vue"),
+    },
+    {
+      path: "",
+      name: "dashboard articles",
+      component: () => import("../pages/dashboard/Articles.vue"),
+    },
+    {
+      path: "",
+      name: "dashboard favourites",
+      component: () => import("../pages/dashboard/Favourites.vue"),
+    },
+    {
+      path: "",
+      name: "dashboard orders",
+      component: () => import("../pages/dashboard/Orders.vue"),
+    },
+    {
+      path: "/:pathMatch(.*)*",
+      name: "dashboard not found",
+      component: NotFound,
+    },
+  ],
+};
+
+const routes: RouteRecordRaw[] = [main, studio, gallery, dashboard];
 
 export default routes;

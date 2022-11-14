@@ -1,15 +1,23 @@
 <script lang="ts" setup>
   // import { onMounted, ref } from 'vue'
 
-  import { computed } from "vue";
-  import { useRouter } from "vue-router";
+  import { computed, onMounted, ref } from "vue";
+  import { RouterLink, RouterView, useRouter } from "vue-router";
+  import { api } from "../api";
   import FooterComponent from "../components/FooterComponent.vue";
+  import NotFound from "../pages/NotFound.vue";
 
   const router = useRouter();
-
+  const studioInfo = ref();
   const studioName = computed(
     () => router.currentRoute.value.params.studioName
   );
+  onMounted(async () => {
+    const data = await fetch(`${api}/artist/${studioName.value}`);
+    if (!data.ok) return (studioInfo.value = undefined);
+    const jsonData = await data.json();
+    studioInfo.value = jsonData?.artist;
+  });
 </script>
 
 <template>
@@ -54,12 +62,11 @@
     <!-- router-view -->
     <router-view v-slot="{ Component }">
       <transition name="fade" class="duration-500 min-h-screen">
-        <component :is="Component" />
+        <NotFound v-if="!studioInfo?.id" />
+        <component :is="Component" v-else />
       </transition>
     </router-view>
 
     <FooterComponent />
   </div>
 </template>
-
-<style></style>

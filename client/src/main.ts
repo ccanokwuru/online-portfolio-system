@@ -54,11 +54,15 @@ const isAuthenticated = async (
 
 router.beforeEach(async (to, from, next) => {
   const auth = await isAuthenticated(to);
-  next();
-  // if (!auth && to.meta.requireAuth) next({ name: "login" });
-  // else if (auth && !to.meta.requireAuth && to.meta.title !== "404 Not Found")
-  //   next({ name: "dashboard" });
-  // else next();
+  if (
+    (to.name?.toString().toLowerCase() === "login" ||
+      to.name?.toString().toLowerCase() === "register") &&
+    auth
+  )
+    return next({ name: "home" });
+  else if (to.fullPath.startsWith("/dashboard") && !auth)
+    return next({ name: "login" });
+  else next();
 });
 
 app.use(router);

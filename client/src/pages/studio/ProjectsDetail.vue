@@ -16,8 +16,10 @@
   onMounted(async () => {
     const data = await fetch(`${api}/artist/${studio.value}`);
     if (!data.ok) studioInfo.value = undefined;
-    const jsonData = await data.json();
-    studioInfo.value = jsonData?.artist;
+    else {
+      const jsonData = await data.json();
+      studioInfo.value = jsonData?.artist;
+    }
 
     const workData = await fetch(`${api}/work/${workId.value}`);
     const jsonAllWorks = await workData.json();
