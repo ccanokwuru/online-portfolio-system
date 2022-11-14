@@ -133,22 +133,22 @@ const dashboard: RouteRecordRaw = {
       component: () => import("../pages/dashboard/Index.vue"),
     },
     {
-      path: "",
+      path: "works",
       name: "dashboard works",
       component: () => import("../pages/dashboard/Works.vue"),
     },
     {
-      path: "",
+      path: "articles",
       name: "dashboard articles",
       component: () => import("../pages/dashboard/Articles.vue"),
     },
     {
-      path: "",
+      path: "favourites",
       name: "dashboard favourites",
       component: () => import("../pages/dashboard/Favourites.vue"),
     },
     {
-      path: "",
+      path: "orders",
       name: "dashboard orders",
       component: () => import("../pages/dashboard/Orders.vue"),
     },

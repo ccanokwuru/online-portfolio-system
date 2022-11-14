@@ -76,7 +76,7 @@
         Account
       </button>
       <div
-        class="transition-all duration-500 absolute rounded-md right-4 p-3 flex flex-col items-start"
+        class="transition-all duration-500 absolute rounded-md right-4 flex flex-col items-start overflow-hidden"
         :class="{
           'top-[3rem] shadow-xl  bg-white z-[99999]': drop,
           'opacity-0 top-[-100vh] ': !drop,
@@ -85,16 +85,16 @@
         <a
           href="/dashboard"
           target="_blank"
-          class="font-semibold md:font-bold text-red-900 self-center w-full"
+          class="font-semibold p-2 md:font-bold text-red-900 self-center w-full block hover:bg-slate-300 transition-all duration-500"
           >Dashboard</a
         >
-        <div
+        <span
           target="_blank"
-          class="font-semibold md:font-bold text-red-900 self-center w-full cursor-pointer"
+          class="font- p-2 md:font-bold text-red-900 self-center w-full cursor-pointer block hover:bg-slate-300 transition-all duration-500"
           @click="logout"
         >
           Logout
-        </div>
+        </span>
       </div>
     </div>
   </header>
