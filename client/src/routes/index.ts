@@ -1,7 +1,6 @@
 import { RouteRecordRaw } from "vue-router";
 // Layouts
 import MainLayout from "../layouts/MainLayout.vue";
-import DashboardLayout from "../layouts/DashboardLayout.vue";
 import StudioLayout from "../layouts/StudioLayout.vue";
 import GalleryLayout from "../layouts/GalleryLayout.vue";
 
@@ -125,7 +124,7 @@ const gallery: RouteRecordRaw = {
 const dashboard: RouteRecordRaw = {
   path: "/dashboard/",
   // exact,
-  component: DashboardLayout,
+  component: MainLayout,
   children: [
     {
       path: "",

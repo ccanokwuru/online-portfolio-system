@@ -22,16 +22,16 @@
 </script>
 <template>
   <div
-    class="absolute z-[-2] bg-opacity-[.68] w-screen p-10 top-0 bg-[#BBC1CF]"
+    class="absolute z-[-50] w-full bg-opacity-[.68] h-[200px] -top-[100px] bg-[#9da4b3]"
   ></div>
   <!-- hero section -->
   <section class="bg-[#BBC1CF] hero relative">
     <div class="container flex flex-wrap-reverse h-full relative">
       <div
-        class="text-[7rem] lg:text-[8rem] xl:text-[10rem] tracking-[0.15em] uppercase font-bold text-red-900 opacity-[0.08] absolute self-center left-[-10%] hidden md:flex md:items-center top-0 bottom-0 z-10"
+        class="text-[7rem] lg:text-[8rem] xl:text-[10rem] tracking-[0.15em] uppercase font-bold text-red-900 opacity-[0.08] absolute self-center left-[-10%] hidden md:flex md:items-center top-0 bottom-0 z-5"
       >
         <div class="self-center text-justify min-w-screen">
-          <h2 class="leading-normal z-50">
+          <h2 class="leading-normal">
             see my <br />
             works
           </h2>

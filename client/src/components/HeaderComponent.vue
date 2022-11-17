@@ -2,7 +2,7 @@
   import Swal from "sweetalert2";
   import { computed, ref } from "vue";
   import { useRouter } from "vue-router";
-  import { api, app } from "../api";
+  import { api } from "../api";
   import { userStore } from "../store/user";
 
   const router = useRouter();
@@ -29,6 +29,7 @@
       title: `${json.message}`,
       text: `${json.errors ?? ""}`,
       showConfirmButton: false,
+      timer: 2000,
     });
     if (response.status === 200) {
       successfull.value = true;
@@ -47,10 +48,10 @@
 
 <template>
   <header
-    class="sticky top-0 w-screen py-2 z-[99999] bg-opacity-10 bg-slate-900 bg-blur text-sm transition-all duration-500 md:text-base"
+    class="sticky top-0 w-full py-2 z-[99999] bg-opacity-10 bg-blur text-sm transition-all duration-500 md:text-base"
     :class="{ 'shadow-md': addShadow }"
   >
-    <div class="flex container content-center justify-between gap-5 relative">
+    <div class="flex container content-center justify-between gap-3 relative">
       <router-link to="/" class="self-center">
         <img src="../assets/logo.png" class="nav-logo" />
       </router-link>
@@ -82,11 +83,10 @@
           'opacity-0 top-[-100vh] ': !drop,
         }"
       >
-        <a
-          href="/dashboard"
-          target="_blank"
+        <router-link
+          to="/dashboard"
           class="font-semibold p-2 md:font-bold text-red-900 self-center w-full block hover:bg-slate-300 transition-all duration-500"
-          >Dashboard</a
+          >Dashboard</router-link
         >
         <span
           target="_blank"

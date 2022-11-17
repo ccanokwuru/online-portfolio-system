@@ -7,7 +7,7 @@
   const pathArray = computed(() => fullPath.value.split("/"));
 </script>
 <template>
-  <div class="w-screen h-screen flex content-center">
+  <div class="w-full h-screen flex content-center">
     <div class="self-center text-center container">
       <h1 class="text-3xl text-stale-900 py-4 font-bold">
         Ooops!!

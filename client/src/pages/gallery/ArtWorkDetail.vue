@@ -17,6 +17,9 @@
 
   const activeImage = ref("");
 
+  const back = () =>
+    window.history.state.back ? router.back() : router.push("/exhibitions");
+
   onMounted(async () => {
     const response = await (await fetch(`${api}/work/${id}`)).json();
     work.value = response?.work;
@@ -76,7 +79,7 @@
     >
       <span
         class="flex gap-1 items-center fixed md:sticky top-20 cursor-pointer hover:font-semibold transition-all duration-500"
-        @click="router.back()"
+        @click="back"
       >
         <i class="bi bi-arrow-left-short text-2xl"></i>
         Back

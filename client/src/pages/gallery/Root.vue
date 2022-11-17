@@ -30,7 +30,9 @@
       class="py-6"
       :class="{ 'bg-gray-300': index % 2 }"
     >
-      <div class="container flex items-center content-center justify-between">
+      <div
+        class="container flex items-center content-center justify-between truncate"
+      >
         <h2 class="header-text capitalize">Featured {{ category.name }}</h2>
         <router-link
           :to="`/exhibitions/cat/${category.id}/${category.name}`"

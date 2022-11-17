@@ -37,7 +37,23 @@
     }
   };
 
-  const becomeArtist = () => {};
+  const becomeArtist = async () => {
+    const response = await fetch(`${api}/user/become-artist`, {
+      method: "post",
+      headers: {
+        Authorization: `Bearer ${auth.value}`,
+      },
+    });
+
+    const json = await response.json();
+
+    Swal.close();
+    await Swal.fire({
+      title: `${json.message}`,
+      text: `${json.errors ?? ""}`,
+      showConfirmButton: false,
+    });
+  };
 
   const toggle = () => {
     expand.value = !expand.value;
@@ -47,14 +63,17 @@
 
 <template>
   <aside
-    class="h-full transition-all duration-500 md:text-base w-fit whitespace-pre-wrap"
-    :class="{
-      'shadow-md md:shadow-none': addShadow,
-    }"
+    class="!h-full transition-all duration-500 md:text-base w-fit whitespace-pre-wrap"
   >
-    <button @click="toggle" class="md:hidden p-2">
-      <i class="bi bi-menu-button"></i>
-    </button>
+    <div class="p-2 flex w-full justify-end">
+      <button
+        @click="toggle"
+        class="p-2 btn transition-all duration-500"
+        :class="{ 'rotate-180': !expand }"
+      >
+        <i class="bi bi-arrow-left"></i>
+      </button>
+    </div>
     <div
       class="flex flex-col w-fit p-2 justify-between gap-5 relative sidebar overflow-hidden"
     >
@@ -68,10 +87,9 @@
           :class="{
             'bg-red-900 text-white rounded': useRoute().name === 'dashboard',
           }"
+          title="Dashboard"
           ><i class="bi bi-app-indicator"></i>
-          <span
-            :class="{ 'absolute md:relative left-[-100vw] md:left-0': !expand }"
-          >
+          <span :class="{ 'left-[-100vw] opacity-0 absolute': !expand }">
             Dashboard</span
           ></router-link
         >
@@ -80,10 +98,10 @@
           to="/dashboard/works"
           exact
           class="link"
+          title="Works"
         >
           <i class="bi bi-brush-fill"></i>
-          <span
-            :class="{ 'absolute md:relative left-[-100vw] md:left-0': !expand }"
+          <span :class="{ 'left-[-100vw] opacity-0 absolute': !expand }"
             >Works</span
           >
         </router-link>
@@ -92,10 +110,10 @@
           to="/dashboard/articles"
           exact
           class="link"
+          title="Articles"
         >
           <i class="bi bi-journal-richtext"></i>
-          <span
-            :class="{ 'absolute md:relative left-[-100vw] md:left-0': !expand }"
+          <span :class="{ 'left-[-100vw] opacity-0 absolute': !expand }"
             >Articles</span
           >
         </router-link>
@@ -103,9 +121,9 @@
           active-class="bg-red-900 text-white rounded"
           to="/dashboard/favourites"
           class="link"
+          title="Favourites"
           ><i class="bi bi-bookmark-star-fill"></i>
-          <span
-            :class="{ 'absolute md:relative left-[-100vw] md:left-0': !expand }"
+          <span :class="{ 'left-[-100vw] opacity-0 absolute': !expand }"
             >Favourites</span
           >
         </router-link>
@@ -114,21 +132,21 @@
           to="/dashboard/orders"
           exact
           class="link"
+          title="Orders"
           ><i class="bi bi-receipt"></i>
-          <span
-            :class="{ 'absolute md:relative left-[-100vw] md:left-0': !expand }"
+          <span :class="{ 'left-[-100vw] opacity-0 absolute': !expand }"
             >Orders
           </span>
         </router-link>
 
         <div
           target="_blank"
-          class="font-semibold md:font-bold link self-center w-full cursor-pointer hover:bg-red-900 hover:text-white rounded"
+          class="font-semibold link self-center w-full cursor-pointer hover:bg-red-900 hover:text-white rounded"
           @click="becomeArtist"
+          title="Become an Artist"
         >
           <i class="bi bi-node-plus-fill"></i>
-          <span
-            :class="{ 'absolute md:relative left-[-100vw] md:left-0': !expand }"
+          <span :class="{ 'left-[-100vw] opacity-0 absolute': !expand }"
             >Become an Artist</span
           >
         </div>
@@ -136,10 +154,10 @@
           target="_blank"
           class="font-semibold md:font-bold text-red-900 link self-center w-full cursor-pointer hover:bg-red-900 hover:text-white rounded"
           @click="logout"
+          title="Logout"
         >
           <i class="bi bi-door-closed"></i>
-          <span
-            :class="{ 'absolute md:relative left-[-100vw] md:left-0': !expand }"
+          <span :class="{ 'left-[-100vw] opacity-0 absolute': !expand }"
             >Logout</span
           >
         </div>

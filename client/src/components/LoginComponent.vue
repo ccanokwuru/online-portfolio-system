@@ -13,11 +13,6 @@
   const loading = ref(false);
   const email = ref("");
   const password = ref("");
-  // const last_name = ref("");
-  // const other_name = ref("");
-  // const display_name = ref("");
-  // const first_name = ref("");
-  // const confirm_password = ref("");
 
   const submit = async () => {
     loading.value = true;
@@ -28,7 +23,7 @@
     loading.value = false;
     if (response.message === "success") {
       successfull.value = true;
-      return router.push("/");
+      return window.history.state?.back ? router.back() : router.push("/");
     }
     Swal.close();
     await Swal.fire({

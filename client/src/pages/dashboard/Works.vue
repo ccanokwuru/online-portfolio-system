@@ -1,7 +1,6 @@
 <script setup lang="ts">
   import { onMounted, ref } from "vue";
   import { api } from "../../api";
-  import SummaryBoxComponent from "../../components/SummaryBoxComponent.vue";
   const works = ref();
   const articles = ref();
   const favourites = ref();
@@ -15,27 +14,9 @@
 </script>
 <template>
   <div class="container max-w-screen-xl py-10 flex flex-col gap-10">
-    <h1 class="text-xl sticky top-30">Dashboard</h1>
+    <h4 class="font-semibold text-lg pb-5 md:pb-10">Works</h4>
 
-    <section class="flex flex-wrap gap-5 w-full justify-between">
-      <SummaryBoxComponent
-        label="works"
-        class="grow sm:min-w-[0.8/2] sm:shrink md:w-[0.8/4]"
-        :value="works?._count"
-      />
-      <SummaryBoxComponent
-        label="articles"
-        class="grow min-w-[0.8/2] sm:shrink md:w-[0.8/4]"
-      />
-      <SummaryBoxComponent
-        label="favourites"
-        class="grow min-w-[0.8/2] sm:shrink md:w-[0.8/4]"
-      />
-      <SummaryBoxComponent
-        label="orders"
-        class="grow min-w-[0.8/2] sm:shrink md:w-[0.8/4]"
-      />
-    </section>
+    <section class="flex flex-wrap gap-5 w-full justify-between"></section>
   </div>
 </template>
 <style></style>

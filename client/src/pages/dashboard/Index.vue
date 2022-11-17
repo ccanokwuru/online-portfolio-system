@@ -1,46 +1,61 @@
 <script setup lang="ts">
   import { onMounted, ref } from "vue";
   import { api } from "../../api";
+  import CardDefault from "../../components/CardDefault.vue";
   import SummaryBoxComponent from "../../components/SummaryBoxComponent.vue";
   import { userStore } from "../../store/user";
-  const works = ref();
-  const articles = ref();
+  const topArtist = ref();
+  const topWork = ref();
   const favourites = ref();
   const orders = ref();
 
   onMounted(async () => {
-    const allWorks = await fetch(`${api}/artist/`, {
+    const artistData = await fetch(`${api}/artist/top-artist`, {
       headers: {
         Authorization: `Bearer ${userStore().authToken}`,
       },
     });
-    console.log(await allWorks.json());
-    const jsonAllWorks = await allWorks.json();
-    works.value = jsonAllWorks?.works;
+    const artistDataJson = artistData.ok ? await artistData.json() : undefined;
+    topArtist.value = artistDataJson?.artist;
+
+    const workData = await fetch(`${api}/work/top-work`, {
+      headers: {
+        Authorization: `Bearer ${userStore().authToken}`,
+      },
+    });
+    const workDataJson = workData.ok ? await workData.json() : undefined;
+    topWork.value = workDataJson?.work;
   });
 </script>
 <template>
   <div class="container max-w-screen-xl py-10 flex flex-col gap-10">
-    <h1 class="text-xl sticky top-30">Dashboard</h1>
+    <section>
+      <h4 class="font-semibold text-lg pb-5 md:pb-10">Tops</h4>
+      <div class="grid gap-5 md:gap-10 grid-cols-2 md:grid-cols-4">
+        <div class="justify-between grow md:w-[0.8/2]">
+          <CardDefault
+            title="Top Artist"
+            header="Top Artist"
+            rounded
+            roundedImage
+            :description="`@${topArtist?.profile?.display_name}`"
+            :imageUrl="topArtist?.profile?.avatar"
+            :href="'/studio/' + topArtist?.profile?.display_name.toLowerCase()"
+          />
+        </div>
 
-    <section class="flex flex-wrap gap-5 w-full justify-between">
-      <SummaryBoxComponent
-        label="works"
-        class="grow sm:min-w-[0.8/2] sm:shrink md:w-[0.8/4]"
-        :value="works?._count"
-      />
-      <SummaryBoxComponent
-        label="articles"
-        class="grow min-w-[0.8/2] sm:shrink md:w-[0.8/4]"
-      />
-      <SummaryBoxComponent
-        label="favourites"
-        class="grow min-w-[0.8/2] sm:shrink md:w-[0.8/4]"
-      />
-      <SummaryBoxComponent
-        label="orders"
-        class="grow min-w-[0.8/2] sm:shrink md:w-[0.8/4]"
-      />
+        <div class="justify-between grow md:w-[0.8/2]">
+          <CardDefault
+            title="Top Art"
+            header="Top Art"
+            rounded
+            roundedImage
+            :description="`${topWork?.description}`"
+            :imageUrl="topWork?.files?.images[0]"
+            :href="`/exhibitions/item/${topWork?.id}/${topWork?.title}`"
+          />
+        </div>
+      </div>
     </section>
   </div>
 </template>

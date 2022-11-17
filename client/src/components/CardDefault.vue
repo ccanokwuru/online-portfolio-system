@@ -2,13 +2,13 @@
   import { ref } from "vue";
 
   defineProps<{
-    header: string;
-    imageUrl: string;
-    description: string;
-    href: string;
-    roundedImage: boolean;
-    openInBlank: boolean;
-    rounded: boolean;
+    header?: string;
+    imageUrl?: string;
+    description?: string;
+    href?: string;
+    roundedImage?: boolean;
+    openInBlank?: boolean;
+    rounded?: boolean;
   }>();
 
   const change = ref(false);
