@@ -68,10 +68,14 @@
     <div class="p-2 flex w-full justify-end">
       <button
         @click="toggle"
-        class="p-2 btn transition-all duration-500"
-        :class="{ 'rotate-180': !expand }"
+        class="p-2 btn transition-all duration-500 flex items-center justify-end text-xl"
       >
-        <i class="bi bi-arrow-left"></i>
+        <span
+          class="tranistion-all duration-500"
+          :class="{ 'rotate-180': !expand }"
+        >
+          <i class="bi bi-text-indent-right"></i
+        ></span>
       </button>
     </div>
     <div

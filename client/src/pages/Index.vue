@@ -18,6 +18,8 @@
   onMounted(async () => {
     artWorks.value = await (await fetch(`${api}/work/get-all`)).json();
     artists.value = await (await fetch(`${api}/artist/get-all`)).json();
+
+    console.log({ works: artWorks.value.works });
   });
 </script>
 <template>
@@ -84,6 +86,7 @@
             :description="work.description"
             :href="`/exhibitions/item/${work.id}/${work.title}`"
             :image-url="work.files.images[0]"
+            :tags="work.skills.map((i:any )=>{return{name:i?.name,url:``}})"
           />
         </div>
       </div>

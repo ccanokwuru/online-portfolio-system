@@ -29,11 +29,7 @@ const router = createRouter({
           left: 0,
           top: 0,
           behavior: "smooth",
-          el: to.hash
-            ? to.hash
-            : to.fullPath.startsWith("/dashboard")
-            ? "main#dashboard_layout"
-            : `body`,
+          el: to.hash ? to.hash : `body`,
         });
       }, 100);
     });

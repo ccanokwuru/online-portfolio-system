@@ -39,7 +39,7 @@
     loading.value = false;
     if (response.status === 201) {
       successfull.value = true;
-      return router.push("/");
+      return router.push({ name: "login" });
     }
     const json = await response.json();
     Swal.close();

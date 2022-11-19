@@ -9,6 +9,10 @@
     roundedImage?: boolean;
     openInBlank?: boolean;
     rounded?: boolean;
+    tags?: {
+      url?: string;
+      name: string;
+    }[];
   }>();
 
   const change = ref(false);
@@ -53,6 +57,20 @@
           {{ description }}
         </div>
       </slot>
+    </div>
+
+    <div
+      class="flex gap-2 items-center py-2 truncate transition-all duration-200"
+      :class="{ 'px-2': change }"
+      v-if="tags?.length"
+    >
+      <router-link
+        v-for="(tag, index) in tags"
+        :key="index"
+        :to="tag.url ?? '#/'"
+        class="bg-slate-200 rounded-full p-1 px-3 z-[100] text-sm"
+        >{{ tag.name }}</router-link
+      >
     </div>
 
     <router-link

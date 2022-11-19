@@ -57,6 +57,24 @@
         </div>
       </div>
     </section>
+
+    <section>
+      <h4 class="font-semibold text-lg pb-5 md:pb-10">Summary</h4>
+      <div class="flex overflow-hidden overflow-x-auto gap-5 md:gap-10">
+        <div class="grow sm:w-[0.8/2] md:w-[0.8/4] min-w-[200px]">
+          <SummaryBoxComponent label="works" class="w-full" />
+        </div>
+        <div class="grow sm:w-[0.8/2] md:w-[0.8/4] min-w-[200px]">
+          <SummaryBoxComponent label="works" class="w-full" />
+        </div>
+        <div class="grow sm:w-[0.8/2] md:w-[0.8/4] min-w-[200px]">
+          <SummaryBoxComponent label="works" class="w-full" />
+        </div>
+        <div class="grow sm:w-[0.8/2] md:w-[0.8/4] min-w-[200px]">
+          <SummaryBoxComponent label="works" class="w-full" />
+        </div>
+      </div>
+    </section>
   </div>
 </template>
 <style></style>
