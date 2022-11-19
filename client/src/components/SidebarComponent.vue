@@ -1,11 +1,12 @@
 <script setup lang="ts">
   import Swal from "sweetalert2";
-  import { computed, ref } from "vue";
-  import { useRouter, useRoute } from "vue-router";
+  import { computed, ref, watch } from "vue";
+  import { useRouter, useRoute, RouterLink } from "vue-router";
   import { api, app } from "../api";
   import { userStore } from "../store/user";
 
   const router = useRouter();
+  const route = useRoute();
 
   const expand = ref(false);
   const successfull = ref(false);
@@ -49,7 +50,7 @@
 
     Swal.close();
     await Swal.fire({
-      title: `${json.message}`,
+      title: `${json.message.toUpperCase()}`,
       text: `${json.errors ?? ""}`,
       showConfirmButton: false,
     });
@@ -59,6 +60,10 @@
     expand.value = !expand.value;
     addShadow.value = !addShadow.value;
   };
+
+  watch(route, () => {
+    expand.value = false;
+  });
 </script>
 
 <template>
@@ -70,12 +75,15 @@
         @click="toggle"
         class="p-2 btn transition-all duration-500 flex items-center justify-end text-xl"
       >
-        <span
-          class="tranistion-all duration-500"
-          :class="{ 'rotate-180': !expand }"
-        >
-          <i class="bi bi-text-indent-right"></i
-        ></span>
+        <span class="tranistion-all duration-500">
+          <i
+            class="bi"
+            :class="{
+              'bi-text-indent-right': !expand,
+              'bi-text-indent-left': expand,
+            }"
+          ></i>
+        </span>
       </button>
     </div>
     <div
@@ -85,21 +93,22 @@
         class="grow flex flex-col gap-x-2 md:gap-x-5 justify-start content-center self-center font-[500] md:font-semibold gap-3 overflow-hidden overflow-y-auto whitespace-nowrap"
       >
         <router-link
-          to="/dashboard"
+          to="/my-account"
           exact
           class="link"
           :class="{
-            'bg-red-900 text-white rounded': useRoute().name === 'dashboard',
+            'bg-red-900 text-white rounded': useRoute().name === 'my-account',
           }"
-          title="Dashboard"
-          ><i class="bi bi-app-indicator"></i>
-          <span :class="{ 'left-[-100vw] opacity-0 absolute': !expand }">
-            Dashboard</span
-          ></router-link
+          title="My Account"
         >
+          <i class="bi bi-app-indicator"></i>
+          <span :class="{ 'left-[-100vw] opacity-0 absolute': !expand }">
+            My Account</span
+          >
+        </router-link>
         <router-link
           active-class="bg-red-900 text-white rounded"
-          to="/dashboard/works"
+          to="/my-account/works"
           exact
           class="link"
           title="Works"
@@ -111,7 +120,7 @@
         </router-link>
         <router-link
           active-class="bg-red-900 text-white rounded"
-          to="/dashboard/articles"
+          to="/my-account/articles"
           exact
           class="link"
           title="Articles"
@@ -123,7 +132,7 @@
         </router-link>
         <router-link
           active-class="bg-red-900 text-white rounded"
-          to="/dashboard/favourites"
+          to="/my-account/favourites"
           class="link"
           title="Favourites"
           ><i class="bi bi-bookmark-star-fill"></i>
@@ -133,7 +142,7 @@
         </router-link>
         <router-link
           active-class="bg-red-900 text-white rounded"
-          to="/dashboard/orders"
+          to="/my-account/orders"
           exact
           class="link"
           title="Orders"

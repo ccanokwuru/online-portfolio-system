@@ -46,7 +46,7 @@
     <div class="my-2 pb-2">
       <!-- Name -->
       <slot name="header" v-if="header">
-        <h6 class="header" :class="{ 'px-2': change }">
+        <h6 class="header" :class="{ 'px-2 pt-3': change }">
           {{ header }}
         </h6>
       </slot>
@@ -64,13 +64,17 @@
       :class="{ 'px-2': change }"
       v-if="tags?.length"
     >
-      <router-link
+      <span
         v-for="(tag, index) in tags"
         :key="index"
-        :to="tag.url ?? '#/'"
-        class="bg-slate-200 rounded-full p-1 px-3 z-[100] text-sm"
-        >{{ tag.name }}</router-link
-      >
+        class="bg-slate-200 rounded-full p-1 px-3 z-[100] text-sm relative"
+        >{{ tag.name }}
+        <router-link
+          v-if="tag.url"
+          class="absolute left-0 top-0 w-full h-full"
+          :to="tag.url"
+        />
+      </span>
     </div>
 
     <router-link

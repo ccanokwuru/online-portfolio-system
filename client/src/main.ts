@@ -60,7 +60,7 @@ router.beforeEach(async (to, from, next) => {
     auth
   )
     return next({ name: "home" });
-  else if (to.fullPath.startsWith("/dashboard") && !auth)
+  else if (to.fullPath.startsWith("/my-account") && !auth)
     return next({ name: "login" });
   else next();
 });

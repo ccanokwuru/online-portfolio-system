@@ -84,9 +84,9 @@
         }"
       >
         <router-link
-          to="/dashboard"
+          :to="{ name: 'my-account' }"
           class="font-semibold p-2 md:font-bold text-red-900 self-center w-full block hover:bg-slate-300 transition-all duration-500"
-          >Dashboard</router-link
+          >My Account</router-link
         >
         <span
           target="_blank"

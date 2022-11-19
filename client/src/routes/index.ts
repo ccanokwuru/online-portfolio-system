@@ -122,38 +122,38 @@ const gallery: RouteRecordRaw = {
 };
 
 const dashboard: RouteRecordRaw = {
-  path: "/dashboard/",
+  path: "/my-account/",
   // exact,
   component: MainLayout,
   children: [
     {
       path: "",
-      name: "dashboard",
+      name: "my-account",
       component: () => import("../pages/dashboard/Index.vue"),
     },
     {
       path: "works",
-      name: "dashboard works",
+      name: "my-account works",
       component: () => import("../pages/dashboard/Works.vue"),
     },
     {
       path: "articles",
-      name: "dashboard articles",
+      name: "my-account articles",
       component: () => import("../pages/dashboard/Articles.vue"),
     },
     {
       path: "favourites",
-      name: "dashboard favourites",
+      name: "my-account favourites",
       component: () => import("../pages/dashboard/Favourites.vue"),
     },
     {
       path: "orders",
-      name: "dashboard orders",
+      name: "my-account orders",
       component: () => import("../pages/dashboard/Orders.vue"),
     },
     {
       path: "/:pathMatch(.*)*",
-      name: "dashboard not found",
+      name: "my-account not found",
       component: NotFound,
     },
   ],
