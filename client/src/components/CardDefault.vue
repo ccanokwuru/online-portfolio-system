@@ -67,8 +67,8 @@
       <span
         v-for="(tag, index) in tags"
         :key="index"
-        class="bg-slate-200 rounded-full p-1 px-3 z-[100] text-sm relative"
-        >{{ tag.name }}
+        class="bg-slate-200 rounded-full p-1 px-3 z-[100] text-sm relative font-medium"
+        >#{{ tag.name }}
         <router-link
           v-if="tag.url"
           class="absolute left-0 top-0 w-full h-full"

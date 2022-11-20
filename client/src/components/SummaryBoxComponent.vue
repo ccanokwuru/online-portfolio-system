@@ -8,7 +8,7 @@
   >
     <h3 class="font-semibold text-lg sticky top-30 capitalize">{{ label }}</h3>
 
-    <div class="">{{ value }}</div>
+    <div>{{ value }}</div>
   </div>
 </template>
 <style></style>

@@ -76,7 +76,7 @@
         <div
           v-for="work in artWorks.works"
           :key="work.id"
-          class="min-w-[80%] sm:min-w-[40%] md:min-w-[20%] lg:min-w-[10%] md:max-w-[15rem] grow sm:shrink"
+          class="min-w-[80%] sm:min-w-[40%] sm:max-w-[40%] md:min-w-[20%] lg:min-w-[10%] md:max-w-[15rem] grow sm:shrink transition-all duration-300"
         >
           <CardDefault
             :open-in-blank="true"
@@ -112,7 +112,7 @@
         <div
           v-for="artist in artists.artists"
           :key="artist.id"
-          class="min-w-[80%] sm:min-w-[40%] md:min-w-[20%] lg:min-w-[10%] md:max-w-[15rem] grow sm:shrink"
+          class="min-w-[80%] sm:min-w-[40%] sm:max-w-[40%] md:min-w-[20%] lg:min-w-[10%] md:max-w-[15rem] grow sm:shrink transition-all duration-300"
         >
           <CardDefault
             :open-in-blank="true"

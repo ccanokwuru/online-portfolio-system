@@ -31,6 +31,16 @@ const main: RouteRecordRaw = {
       name: "register",
       component: () => import("../pages/Auth.vue"),
     },
+    {
+      path: "forgotten-password",
+      name: "forgotten password",
+      component: () => import("../pages/Auth.vue"),
+    },
+    {
+      path: "reset-password",
+      name: "reset password",
+      component: () => import("../pages/Auth.vue"),
+    },
     // { path: "articles", name: "articles", component: Index },
     {
       path: "/:pathMatch(.*)*",

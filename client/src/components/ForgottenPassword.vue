@@ -1,33 +1,30 @@
 <script lang="ts" setup>
-  import { Ref, ref, watch } from "vue";
-  import { RouterLink, useRouter } from "vue-router";
+  import { ref, watch } from "vue";
   import Swal from "sweetalert2";
+  import { api } from "../api";
   import FormInput from "./FormInput.vue";
-  import { userStore } from "../store/user";
-
-  const router = useRouter();
-  const { login } = userStore();
 
   const successfull = ref(false);
   const loading = ref(false);
   const email = ref("");
-  const password = ref("");
 
   const submit = async () => {
     loading.value = true;
-    const response = await login({
-      email: email.value,
-      password: password.value,
+    const response = await fetch(`${api}/auth/forgotten-password`, {
+      method: "post",
+      body: JSON.stringify({
+        email: email.value,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
     loading.value = false;
-    if (response.message === "success") {
-      successfull.value = true;
-      return window.history.state?.back ? router.back() : router.push("/");
-    }
+    const json = await response.json();
     Swal.close();
     await Swal.fire({
-      title: `${response.message}`,
-      text: `${response.errors}`,
+      title: `${json.message.toString().toUpperCase()}`,
+      text: `${json?.errors ?? ""}`,
       showConfirmButton: false,
     });
   };
@@ -55,30 +52,20 @@
     class="self-center text-center container max-w-fit shadow rounded py-5"
     @submit.prevent="submit"
   >
-    <h1 class="text-red-900 text-xl font-bold pb-5">Login</h1>
+    <h1 class="text-red-900 text-xl font-bold pb-5">Forgotten Password</h1>
     <div class="flex flex-col gap-3">
       <FormInput type="email" :required="true" label="Email" v-model="email" />
-      <FormInput
-        type="password"
-        :required="true"
-        label="Password"
-        v-model="password"
-      />
 
       <div class="flex w-full flex-wrap gap-x-5 gap-y-2">
         <button type="submit" class="bg-red-900 btn text-white p-3 grow">
-          Login
+          Submit
         </button>
-        <router-link to="/forgotten-password" class="text-red-900 btn grow">
-          Forgotten Password?
-        </router-link>
       </div>
       <div
         class="flex w-full flex-wrap gap-x-5 gap-y-2 items-center font-medium"
       >
-        New Here?
-        <router-link to="/register" class="text-white bg-slate-900 btn grow">
-          Create An Account
+        <router-link to="/login" class="text-slate-900 grow">
+          Back to Login
         </router-link>
       </div>
     </div>
