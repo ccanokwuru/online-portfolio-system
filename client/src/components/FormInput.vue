@@ -6,6 +6,7 @@
     type?: string;
     required?: boolean;
     modelValue: any;
+    small?: boolean;
   }>();
 
   const emit = defineEmits(["update:modelValue"]);
@@ -31,10 +32,12 @@
         :required="required"
         :type="type !== 'password' ? type : showPass ? 'text' : type"
         class="block grow w-full py-3 px-3 mt-2 mb-4 text-gray-800 appearance-none border-2 border-gray-100 focus:text-gray-500 focus:outline-none focus:border-gray-200 rounded-md"
+        :class="{ '!py-1 !px-2 !mt-1 !mb-2': small }"
       />
       <div
         v-if="type === 'password'"
         class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 cursor-pointer"
+        :class="{ '!px-2': small }"
       >
         <p class="font-semibold" @click="showPass = !showPass">
           <i

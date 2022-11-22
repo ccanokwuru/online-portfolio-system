@@ -34,7 +34,6 @@
     if (response.status === 200) {
       successfull.value = true;
       userStore().authToken = undefined;
-      return router.push("/");
     }
   };
 

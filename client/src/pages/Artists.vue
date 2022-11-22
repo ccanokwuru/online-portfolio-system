@@ -21,7 +21,7 @@
         <div
           v-for="artist in artists.artists"
           :key="artist.id"
-          class="min-w-[80%] sm:min-w-[40%] md:min-w-[20%] lg:min-w-[10%] md:max-w-[15rem] grow md:shrink-0"
+          class="grid grid-cols-2 md:grid-cols-4"
         >
           <CardDefault
             :open-in-blank="true"

@@ -29,7 +29,7 @@
   });
 </script>
 <template>
-  <section class="bg-slate-900 hero min-h-[300px] relative">
+  <!-- <section class="hero min-h-[300px] relative">
     <div class="container flex md:flex-wrap h-full flex-wrap-reverse relative">
       <div
         class="self-center flex flex-cols w-full md:w-6/12 text-center md:text-left absolute lg:-ml-[15rem] -ml-[5rem]"
@@ -73,7 +73,7 @@
         />
       </div>
     </div>
-  </section>
+  </section> -->
   <section>
     <div class="container my-7 relative">
       <h2 class="header-text">Projects</h2>
@@ -110,11 +110,11 @@
 </template>
 
 <style scoped>
-  .hero {
+  /* .hero {
     background: linear-gradient(
       180deg,
       rgb(15 23 42 / var(--tw-bg-opacity)) 12.96%,
       rgb(51 65 85 / var(--tw-bg-opacity)) 65.89%
     );
-  }
+  } */
 </style>

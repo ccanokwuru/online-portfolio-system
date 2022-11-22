@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { onMounted, ref } from "vue";
   import { api } from "../../api";
+  import TabsComponent from "../../components/TabsComponent.vue";
   const works = ref();
   const articles = ref();
   const favourites = ref();
