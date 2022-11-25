@@ -6,7 +6,7 @@
 
   interface CategoryI {
     works: any[];
-    categories: any[];
+    categories: CategoryI[];
     name: string;
     description: string;
     id: string;
@@ -52,7 +52,7 @@
   });
 </script>
 <template>
-  <section class="flex flex-col bg-transparent gap-6 container">
+  <section class="flex flex-col bg-transparent gap-6 container py-6">
     <div class="flex items-center content-center justify-between">
       <h2 class="header-text capitalize">
         All in {{ params?.cat ?? category?.name }}

@@ -29,7 +29,7 @@
 <template>
   <section class="hero relative container">
     <div
-      class="self-center flex-grow border-gray-3 border-2 rounded-lg p-5 lg:p-12 md:text-2xl lg:text-5xl bg-blur text-justify leading-tight tracking-wider text-lg mt-3"
+      class="self-center flex-grow border-gray-3 border-2 rounded-lg p-5 lg:p-12 text-xl lg:text-3xl bg-blur text-justify leading-tight tracking-wider mt-3"
     >
       <span class="font-light"> Hi, I am</span>
       <h1 class="md:text-5xl text:2xl">

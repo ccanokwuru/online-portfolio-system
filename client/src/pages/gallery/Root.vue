@@ -6,7 +6,7 @@
 
   interface CategoryI {
     works: any[];
-    categories: any[];
+    categories: CategoryI[];
     name: string;
     description: string;
     id: string;

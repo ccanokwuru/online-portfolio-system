@@ -22,6 +22,7 @@
     loading.value = false;
     if (response.message === "success") {
       successfull.value = true;
+      console.log({ hState: window.history.state });
       return window.history.state?.back ? router.back() : router.push("/");
     }
     Swal.close();

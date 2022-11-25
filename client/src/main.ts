@@ -54,12 +54,7 @@ const isAuthenticated = async (
 
 router.beforeEach(async (to, from, next) => {
   const auth = await isAuthenticated(to);
-  if (
-    (to.name?.toString().toLowerCase() === "login" ||
-      to.name?.toString().toLowerCase() === "register") &&
-    auth
-  )
-    return next({ name: "home" });
+  if (to.meta?.type === "auth" && auth) return next({ name: "home" });
   else if (to.fullPath.startsWith("/my-account") && !auth)
     return next({ name: "login" });
   else next();

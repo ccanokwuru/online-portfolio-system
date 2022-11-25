@@ -25,21 +25,33 @@ const main: RouteRecordRaw = {
       path: "login",
       name: "login",
       component: () => import("../pages/Auth.vue"),
+      meta: {
+        type: "auth",
+      },
     },
     {
       path: "register",
       name: "register",
       component: () => import("../pages/Auth.vue"),
+      meta: {
+        type: "auth",
+      },
     },
     {
       path: "forgotten-password",
       name: "forgotten password",
       component: () => import("../pages/Auth.vue"),
+      meta: {
+        type: "auth",
+      },
     },
     {
       path: "reset-password",
       name: "reset password",
       component: () => import("../pages/Auth.vue"),
+      meta: {
+        type: "auth",
+      },
     },
     // { path: "articles", name: "articles", component: Index },
     {

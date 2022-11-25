@@ -106,14 +106,11 @@
   <div class="container max-w-screen-xl py-10 flex flex-col gap-10">
     <main class="flex flex-wrap md:flex-nowrap gap-10 relative">
       <div class="grow md:min-w-[0.6/2] md:max-w-[200px] gap-10">
-        <h4 class="font-semibold text-lg pb-5 md:pb-10">Profile</h4>
+        <h4 class="font-semibold text-lg pb-10">Profile</h4>
         <div
           class="w-full flex flex-col gap-1 justify-center items-center text-center pb-5"
         >
-          <form
-            :action="`${api}/resource/upload-avatar`"
-            @submit.prevent
-            enctype="multipart/form-data"
+          <div
             class="w-[150px] h-[150px] overflow-hidden flex items-center justify-center rounded-full"
           >
             <input
@@ -123,10 +120,10 @@
               @change="upload"
               ref="rawFile"
             />
-            <label for="avatar-img" class="cursor-pointer self-center"
-              ><img :src="avatar" class="w-full"
-            /></label>
-          </form>
+            <label for="avatar-img" class="cursor-pointer self-center">
+              <img :src="avatar" class="w-full" />
+            </label>
+          </div>
           <span class="font-[200]">@{{ display_name }}</span>
         </div>
 
@@ -185,10 +182,12 @@
         </form>
       </div>
 
-      <div class="grow w-full md:min-w-[0.8/2] gap-10">
+      <div class="grow w-full md:min-w-[0.8/2] gap-20">
         <section>
-          <h4 class="font-semibold text-lg pb-5 md:pb-10">Tops</h4>
-          <div class="grid gap-5 md:gap-10 sm:grid-cols-3">
+          <h4 class="font-semibold text-lg pb-10">Tops</h4>
+          <div
+            class="grid gap-5 md:gap-10 grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3"
+          >
             <div class="w-[0.8/2]">
               <CardDefault
                 title="Top Artist"
@@ -218,7 +217,7 @@
         </section>
 
         <section>
-          <h4 class="font-semibold text-lg pb-5 md:pb-10">Summary</h4>
+          <h4 class="font-semibold text-lg py-10">Summary</h4>
           <div class="flex gap-5 md:gap-10 flex-wrap">
             <SummaryBoxComponent
               label="articles"
