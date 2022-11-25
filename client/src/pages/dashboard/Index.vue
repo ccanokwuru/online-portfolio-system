@@ -120,7 +120,10 @@
               @change="upload"
               ref="rawFile"
             />
-            <label for="avatar-img" class="cursor-pointer self-center">
+            <label
+              for="avatar-img"
+              class="cursor-pointer self-center w-full h-full bg-red-900 bg-opacity-20"
+            >
               <img :src="avatar" class="w-full" />
             </label>
           </div>
